@@ -1,4 +1,5 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
+
 from colourspace.av.stream import Stream
 
 
@@ -6,9 +7,9 @@ class VideoStream(Stream):
     def __init__(self, container, stream):
         self._container = container
         self._stream = stream
-        self._frame = None
+        self._frame = self._get_frame()
 
-    def _get_frame(self, position):
+    def _get_frame(self, position=0):
         # Crude seek to a key frame
         self._container.seek(position)
 
@@ -42,6 +43,22 @@ class VideoStream(Stream):
         """Seek to a precise position. Defaults to start of file."""
         self._frame = self._get_frame(position)
 
+    @property
     def frame(self):
-        """Obtains the current frame"""
+        """Returns the current frame"""
         return self._frame
+
+    @property
+    def container(self):
+        """Returns the file container"""
+        return self._container
+
+    @property
+    def width(self):
+        """Returns the width of the video frames"""
+        return self._stream.width
+
+    @property
+    def height(self):
+        """Returns the width of the height frames"""
+        return self._stream.height
