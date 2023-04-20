@@ -2,6 +2,7 @@
 
 import wx
 
+from colourspace.frontend.utils.pil import image_to_bitmap
 from PIL import Image
 
 
@@ -53,7 +54,7 @@ class VideoFrame(wx.Frame):
         frame = frame.resize(self.GetClientSize(), self._resize_quality)
 
         # Convert from PIL image to wx.Bitmap
-        bitmap = wx.Bitmap.FromBuffer(*frame.size, frame.tobytes())
+        bitmap = image_to_bitmap(frame)
 
         # Draw to frame
         dc.DrawBitmap(bitmap, 0, 0)
