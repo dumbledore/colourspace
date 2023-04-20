@@ -6,13 +6,13 @@ from colourspace.av.video import VideoStream
 
 class Container():
     def __init__(self, filename):
-        self.__container = av.open(filename)
-        self.__streams = [VideoStream(self, self.__container, v)
-                          for v in self.__container.streams.video]
+        container = av.open(filename)
+        self._container = container
+        self._streams = [VideoStream(self, v) for v in container.streams.video]
 
     # Explicit close
     def close(self):
-        self.__container.close()
+        self._container.close()
 
     # Make sure not leaking on object destruction
     def __dealloc__(self):
@@ -32,9 +32,9 @@ class Container():
         position = int(position * av.time_base)
 
         # Seek entire container (all streams) to a key frame
-        self.__container.seek(position)
+        self._container.seek(position)
 
     @property
     def streams(self):
         """Returns a list of available video streams"""
-        return list(self.__streams)
+        return list(self._streams)

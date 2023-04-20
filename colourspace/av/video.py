@@ -3,15 +3,14 @@ from colourspace.av.stream import Stream
 
 
 class VideoStream(Stream):
-    def __init__(self, container, raw_container, stream):
-        self.__container = container
-        self.__raw_container = raw_container
-        self.__stream = stream
-        self.__frame = None
+    def __init__(self, container, stream):
+        self._container = container
+        self._stream = stream
+        self._frame = None
 
-    def __get_frame(self, position):
+    def _get_frame(self, position):
         # Crude seek to a key frame
-        self.__container.seek(position)
+        self._container.seek(position)
 
         # Now seek to a fine position, not just a keyframe
         # by decoding frames until reaching the correct position
@@ -21,7 +20,7 @@ class VideoStream(Stream):
         previous_video_frame = None
 
         # Demux the container and get the next pack for this video stream
-        for packet in self.__raw_container.demux(self.__stream):
+        for packet in self._stream.container.demux(self._stream):
             # Decode all frames in this packet that we just demuxed
             for frame in packet.decode():
                 # Convert the decoded frame postion to seconds
@@ -41,8 +40,8 @@ class VideoStream(Stream):
 
     def seek(self, position=0):
         """Seek to a precise position. Defaults to start of file."""
-        self.__frame = self.__get_frame(position)
+        self._frame = self._get_frame(position)
 
     def frame(self):
         """Obtains the current frame"""
-        return self.__frame
+        return self._frame
