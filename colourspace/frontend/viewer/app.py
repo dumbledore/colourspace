@@ -3,7 +3,7 @@
 import wx
 
 from colourspace.av.container import Container
-from colourspace.frontend.video_frame import VideoFrame
+from colourspace.frontend.frames.video_frame import VideoFrame
 
 
 def main():
