@@ -1,10 +1,20 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
-import tkinter as tk
+
+import wx
+
+from colourspace.av.container import Container
+from colourspace.frontend.video_frame import VideoFrame
 
 
 def main():
-    root = tk.Tk()
-    root.mainloop()
+    app = wx.App()
+
+    container = Container("../data/IMG_5568.MOV")
+    frame = VideoFrame(container.streams[0])
+    frame.Center()
+    frame.Show()
+
+    app.MainLoop()
 
 
 if __name__ == "__main__":
