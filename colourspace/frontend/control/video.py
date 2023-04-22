@@ -31,7 +31,7 @@ class VideoPanel(wx.Panel):
         self._slider = wx.Slider(self)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self._panel, 0, wx.EXPAND | wx.SHAPED)
+        sizer.Add(self._panel, 1, wx.SHAPED)
         sizer.AddSpacer(4)
         sizer.Add(self._slider, 0, wx.EXPAND)
         self.SetSizerAndFit(sizer)
