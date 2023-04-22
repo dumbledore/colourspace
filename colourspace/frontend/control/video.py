@@ -36,6 +36,7 @@ class VideoPanel(wx.Panel):
         duration = int(video.duration * 1000)  # in ms
         self._slider = wx.Slider(
             self, maxValue=duration, style=wx.SL_HORIZONTAL | wx.SL_AUTOTICKS)
+        self._slider.Bind(wx.EVT_SLIDER, self.on_seek)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self._panel, 1, wx.EXPAND)
@@ -65,6 +66,16 @@ class VideoPanel(wx.Panel):
 
         # Draw to frame
         dc.DrawBitmap(bitmap, 0, 0)
+
+    def on_seek(self, event):
+        position = event.GetInt() / 1000
+
+        # Repaint only if seek actually
+        # produced a different frame
+        if self._video.seek(position):
+            self._panel.Refresh()
+        else:
+            print("Skipping seek")
 
     def get_best_size(self, size):
         aspect_ratio = self.video.height / self.video.width
