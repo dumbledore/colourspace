@@ -62,3 +62,8 @@ class VideoStream(Stream):
     def height(self):
         """Returns the width of the height frames"""
         return self._stream.height
+
+    @property
+    def duration(self):
+        """Returns the duration of the stream in seconds"""
+        return float(self._stream.duration * self._stream.time_base)
