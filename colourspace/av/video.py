@@ -8,6 +8,7 @@ class VideoStream(Stream):
         self._container = container
         self._stream = stream
         self._frame = self._get_frame()
+        self._position = 0
 
     def _get_frame(self, position=0):
         # Crude seek to a key frame
@@ -41,7 +42,14 @@ class VideoStream(Stream):
 
     def seek(self, position=0):
         """Seek to a precise position. Defaults to start of file."""
-        self._frame = self._get_frame(position)
+        # Actually seek only if position has changed or decoding for the first time
+        if position != self._position or not self._frame:
+            self._position = position
+            self._frame = self._get_frame(position)
+            return True
+
+        # No need to seek
+        return False
 
     @property
     def frame(self):
