@@ -34,7 +34,8 @@ class VideoPanel(wx.Panel):
         self._panel.Bind(wx.EVT_PAINT, self.on_paint)
 
         duration = int(video.duration * 1000)  # in ms
-        self._slider = wx.Slider(self, maxValue=duration)
+        self._slider = wx.Slider(
+            self, maxValue=duration, style=wx.SL_HORIZONTAL | wx.SL_AUTOTICKS)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self._panel, 1, wx.EXPAND)
