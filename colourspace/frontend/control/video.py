@@ -7,6 +7,11 @@ from PIL import Image
 
 
 class VideoPanel(wx.Panel):
+    # A spacer between the video panel and the slider
+    # W/o the spacer, a portion of the video panel
+    # has to be re-painted while moving the slider.
+    SPACER = 4
+
     def __init__(self, parent,
                  video,
                  resize_quality=Image.LINEAR,
@@ -31,8 +36,8 @@ class VideoPanel(wx.Panel):
         self._slider = wx.Slider(self)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(self._panel, 1, wx.SHAPED)
-        sizer.AddSpacer(4)
+        sizer.Add(self._panel, 1, wx.EXPAND)
+        sizer.AddSpacer(VideoPanel.SPACER)
         sizer.Add(self._slider, 0, wx.EXPAND)
         self.SetSizerAndFit(sizer)
 
@@ -58,3 +63,12 @@ class VideoPanel(wx.Panel):
 
         # Draw to frame
         dc.DrawBitmap(bitmap, 0, 0)
+
+    def get_best_size(self, size):
+        aspect_ratio = self.video.height / self.video.width
+        width, height = size
+        height = int(width * aspect_ratio)
+        height += VideoPanel.SPACER
+        height += self._slider.GetClientSize()[1]
+
+        return (width, height)

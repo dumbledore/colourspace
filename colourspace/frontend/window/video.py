@@ -19,10 +19,17 @@ class VideoFrame(wx.Frame):
         self.Fit()
 
         self.Bind(wx.EVT_CLOSE, self.on_close)
+        self.Bind(wx.EVT_SIZE, self.on_size)
 
     def on_close(self, event):
         # close the container w/o waiting for dtr
         self._video.video.container.close()
 
         # Skip the event so that it is handled correctly by somebody else
+        event.Skip()
+
+    def on_size(self, event):
+        size = self.GetClientSize()
+        size = self._video.get_best_size(size)
+        self.SetClientSize(size)
         event.Skip()
