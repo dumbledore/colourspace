@@ -9,6 +9,10 @@ class VideoStream(Stream):
         self._stream = stream
         self._frame = self._get_frame()
         self._position = 0
+        self._key_frames = [float(p.pts * p.time_base)
+                            for p in stream.container.demux(stream) if p.is_keyframe]
+        # rewind container
+        container.seek(0)
 
     def _get_frame(self, position=0):
         # Crude seek to a key frame
@@ -75,3 +79,8 @@ class VideoStream(Stream):
     def duration(self):
         """Returns the duration of the stream in seconds"""
         return float(self._stream.duration * self._stream.time_base)
+
+    @property
+    def key_frames(self):
+        """Returns a list of the positions of the keyframes"""
+        return list(self._key_frames)
