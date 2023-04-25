@@ -10,7 +10,8 @@ def main():
     app = wx.App()
 
     container = Container("../data/IMG_5568.MOV")
-    frame = VideoFrame(container.streams[0])
+    stream = container.streams[0]
+    frame = VideoFrame(stream)
     frame.Center()
     frame.Show()
 
