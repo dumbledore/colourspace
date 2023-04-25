@@ -14,21 +14,21 @@ class VideoFrame(wx.Frame):
 
         super().__init__(None, title=video.container.filename, *args, **kwargs)
 
-        self.statusbar = self.CreateStatusBar(2)
+        self._statusbar = self.CreateStatusBar(2)
         self._video = VideoPanel(self, video, resize_quality, size_divisor)
         self.Fit()
 
-        self.Bind(wx.EVT_CLOSE, self.on_close)
-        self.Bind(wx.EVT_SIZE, self.on_size)
+        self.Bind(wx.EVT_CLOSE, self._on_close)
+        self.Bind(wx.EVT_SIZE, self._on_size)
 
-    def on_close(self, event):
+    def _on_close(self, event):
         # close the container w/o waiting for dtr
         self._video.video.container.close()
 
         # Skip the event so that it is handled correctly by somebody else
         event.Skip()
 
-    def on_size(self, event):
+    def _on_size(self, event):
         size = self.GetClientSize()
         size = self._video.get_best_size(size)
         self.SetClientSize(size)

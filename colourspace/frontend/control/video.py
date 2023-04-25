@@ -31,7 +31,7 @@ class VideoPanel(wx.Panel):
 
         self._panel = wx.Panel(self, size=video_size)
         self._panel.SetBackgroundStyle(wx.BG_STYLE_PAINT)
-        self._panel.Bind(wx.EVT_PAINT, self.on_paint)
+        self._panel.Bind(wx.EVT_PAINT, self._on_paint)
 
         duration = int(video.duration * 1000)  # in ms
         self._slider = wx.Slider(
@@ -40,7 +40,7 @@ class VideoPanel(wx.Panel):
         for pts in video.key_frames:
             self._slider.SetTick(int(pts * 1000))
 
-        self._slider.Bind(wx.EVT_SLIDER, self.on_seek)
+        self._slider.Bind(wx.EVT_SLIDER, self._on_seek)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self._panel, 1, wx.EXPAND)
@@ -52,7 +52,7 @@ class VideoPanel(wx.Panel):
     def video(self):
         return self._video
 
-    def on_paint(self, event):
+    def _on_paint(self, event):
         # Context for drawing into the frame
         dc = wx.AutoBufferedPaintDC(self._panel)
 
@@ -71,7 +71,7 @@ class VideoPanel(wx.Panel):
         # Draw to frame
         dc.DrawBitmap(bitmap, 0, 0)
 
-    def on_seek(self, event):
+    def _on_seek(self, event):
         position = event.GetInt() / 1000
 
         # Repaint only if seek actually
