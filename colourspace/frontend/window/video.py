@@ -2,7 +2,8 @@
 
 import wx
 
-from colourspace.frontend.control.video import VideoPanel
+from colourspace.frontend.control.video import VideoPanel, EVT_VIDEO_SEEK
+from colourspace.util.time import time_format
 from PIL import Image
 
 
@@ -25,10 +26,18 @@ class VideoFrame(wx.Frame):
             size = self.FromDIP((640, 480))
             self._video = wx.Panel(self, size=size)
 
+        # Set current video position in the status bar to 00:00:00
+        self._update_video_position(0)
+
+        # Set the duration in the status bar
+        duration = time_format(video.duration if video else 0)
+        self._statusbar.SetStatusText(duration, 1)
+
         self.Fit()
 
         self.Bind(wx.EVT_CLOSE, self._on_close)
         self.Bind(wx.EVT_SIZE, self._on_size)
+        self.Bind(EVT_VIDEO_SEEK, self._on_video_seek)
 
     def _on_close(self, event):
         if self._has_video:
@@ -46,3 +55,10 @@ class VideoFrame(wx.Frame):
 
         # Skip the event so that it is handled correctly by somebody else
         event.Skip()
+
+    def _on_video_seek(self, event):
+        self._update_video_position(event.position)
+
+    def _update_video_position(self, position):
+        position = time_format(position)
+        self._statusbar.SetStatusText(position)
