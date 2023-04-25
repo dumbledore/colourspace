@@ -78,8 +78,6 @@ class VideoPanel(wx.Panel):
         # produced a different frame
         if self._video.seek(position):
             self._panel.Refresh()
-        else:
-            print("Skipping seek")
 
     def get_best_size(self, size):
         aspect_ratio = self.video.height / self.video.width
