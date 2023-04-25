@@ -2,7 +2,7 @@
 
 import wx
 
-from colourspace.frontend.utils.pil import image_to_bitmap
+from colourspace.frontend.util.pil import image_to_bitmap
 from PIL import Image
 
 
