@@ -1,9 +1,12 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
 import wx
+import wx.lib.newevent
 
 from colourspace.frontend.util.pil import image_to_bitmap
 from PIL import Image
+
+VideoSeekEvent, EVT_VIDEO_SEEK = wx.lib.newevent.NewEvent()
 
 
 class VideoPanel(wx.Panel):
@@ -77,6 +80,8 @@ class VideoPanel(wx.Panel):
         # Repaint only if seek actually
         # produced a different frame
         if self._video.seek(position):
+            event = VideoSeekEvent(position=position)
+            wx.PostEvent(self.Parent, event)
             self._panel.Refresh()
 
     def get_best_size(self, size):
