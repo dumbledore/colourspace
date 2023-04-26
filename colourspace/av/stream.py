@@ -1,13 +1,18 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
 class Stream():
+    @property
+    def position(self):
+        """Returns the current position"""
+        raise NotImplementedError()
+
     def seek(self, position=0):
         """Seek to a precise position. Defaults to start of file."""
         raise NotImplementedError()
 
     @property
     def frame(self):
-        """Obtains the current frame"""
+        """Returns the current frame"""
         raise NotImplementedError()
 
     @property

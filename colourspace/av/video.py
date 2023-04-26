@@ -44,6 +44,10 @@ class VideoStream(Stream):
         # no more frames (EOF), return whatever was last
         return previous_video_frame
 
+    @property
+    def position(self):
+        return self._position
+
     def seek(self, position=0):
         # Actually seek only if position has changed or decoding for the first time
         if position != self._position or not self._frame:
