@@ -29,10 +29,6 @@ class VideoFrame(wx.Frame):
         # Set current video position in the status bar to 00:00:00
         self._update_video_position(0)
 
-        # Set the duration in the status bar
-        duration = time_format(video.duration if video else 0)
-        self._statusbar.SetStatusText(duration, 1)
-
         self.Fit()
 
         self.Bind(wx.EVT_CLOSE, self._on_close)
@@ -61,4 +57,6 @@ class VideoFrame(wx.Frame):
 
     def _update_video_position(self, position):
         position = time_format(position)
-        self._statusbar.SetStatusText(position)
+        duration = time_format(
+            self._video.video.duration if self._has_video else 0)
+        self._statusbar.SetStatusText(position + "/" + duration)
