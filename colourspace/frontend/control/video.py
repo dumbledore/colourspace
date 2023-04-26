@@ -32,6 +32,8 @@ class VideoPanel(wx.Panel):
         video_size = [s // divisor for s in video_size]
         video_size = self.FromDIP(video_size)
 
+        self._frame = video.frame.to_image()
+
         self._panel = wx.Panel(self, size=video_size)
         self._panel.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         self._panel.Bind(wx.EVT_PAINT, self._on_paint)
@@ -59,14 +61,9 @@ class VideoPanel(wx.Panel):
         # Context for drawing into the frame
         dc = wx.AutoBufferedPaintDC(self._panel)
 
-        # Obtain current frame
-        frame = self._video.frame
-
-        # Convert it to PIL image
-        frame = frame.to_image()
-
         # Scale the frame
-        frame = frame.resize(self._panel.GetClientSize(), self._resize_quality)
+        frame = self._frame.resize(
+            self._panel.GetClientSize(), self._resize_quality)
 
         # Convert from PIL image to wx.Bitmap
         bitmap = image_to_bitmap(frame)
@@ -80,6 +77,8 @@ class VideoPanel(wx.Panel):
         # Repaint only if seek actually
         # produced a different frame
         if self._video.seek(position):
+            # update the current frame
+            self._frame = self._video.frame.to_image()
             event = VideoSeekEvent(position=position)
             wx.PostEvent(self.Parent, event)
             self._panel.Refresh()
