@@ -8,3 +8,8 @@ class Stream():
     def frame(self):
         """Obtains the current frame"""
         raise NotImplementedError()
+
+    @property
+    def container(self):
+        """Returns the file container"""
+        raise NotImplementedError()
