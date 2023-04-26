@@ -45,7 +45,6 @@ class VideoStream(Stream):
         return previous_video_frame
 
     def seek(self, position=0):
-        """Seek to a precise position. Defaults to start of file."""
         # Actually seek only if position has changed or decoding for the first time
         if position != self._position or not self._frame:
             self._position = position
@@ -57,30 +56,24 @@ class VideoStream(Stream):
 
     @property
     def frame(self):
-        """Returns the current frame"""
         return self._frame
 
     @property
     def container(self):
-        """Returns the file container"""
         return self._container
 
     @property
     def width(self):
-        """Returns the width of the video frames"""
         return self._stream.width
 
     @property
     def height(self):
-        """Returns the width of the height frames"""
         return self._stream.height
 
     @property
     def duration(self):
-        """Returns the duration of the stream in seconds"""
         return float(self._stream.duration * self._stream.time_base)
 
     @property
     def key_frames(self):
-        """Returns a list of the positions of the keyframes"""
         return list(self._key_frames)
