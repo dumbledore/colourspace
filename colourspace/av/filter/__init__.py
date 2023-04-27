@@ -124,3 +124,7 @@ class FilteredStream(Stream):
     @property
     def key_frames(self):
         return self._stream.key_frames
+
+    @property
+    def info(self):
+        return self._stream.info

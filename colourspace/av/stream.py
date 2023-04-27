@@ -39,3 +39,7 @@ class Stream():
     def key_frames(self):
         """Returns a list of the positions of the keyframes"""
         raise NotImplementedError()
+
+    @property
+    def info(self):
+        """Returns a dict of metadata for this stream"""

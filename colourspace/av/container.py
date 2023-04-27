@@ -3,13 +3,35 @@
 import av
 
 from colourspace.av.video import VideoStream
+from pymediainfo import MediaInfo
 
 
 class Container():
     def __init__(self, filename):
         container = av.open(filename)
+        info = MediaInfo.parse(filename)
+
+        # If it has image tracks, we treat it as an image-only
+        # and observe only those tracks. This is necessary as in PyAV
+        # there are no image tracks, only video tracks, and images simply
+        # use the video tracks
+        tracks = info.image_tracks if info.image_tracks else info.video_tracks
+
+        # If there is only one track, disregard the ID.
+        # This is needed for images, as there is only one image track
+        # with an id of 'None'.
+        if (len(tracks) == 1) and (len(container.streams.video) == 1):
+            streams = [(container.streams.video[0], tracks[0])]
+        else:
+            # Multiple tracks require matching the track IDs
+            # Reshape the tracks into a {id: track}
+            tracks = {t.track_id: t for t in tracks}
+
+            # now create the (stream, track) pairs
+            streams = [(v, tracks[v.id]) for v in container.streams.video]
+
         self._container = container
-        self._streams = [VideoStream(self, v) for v in container.streams.video]
+        self._streams = [VideoStream(self, v, vars(i)) for v, i in streams]
 
     # Explicit close
     def close(self):

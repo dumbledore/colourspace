@@ -4,9 +4,10 @@ from colourspace.av.stream import Stream
 
 
 class VideoStream(Stream):
-    def __init__(self, container, stream):
+    def __init__(self, container, stream, info):
         self._container = container
         self._stream = stream
+        self._info = info
         self._frame = self._get_frame()
         self._position = 0
         self._key_frames = [float(p.pts * p.time_base)
@@ -81,3 +82,7 @@ class VideoStream(Stream):
     @property
     def key_frames(self):
         return list(self._key_frames)
+
+    @property
+    def info(self):
+        return self._info
