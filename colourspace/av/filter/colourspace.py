@@ -114,11 +114,11 @@ class ColourspaceFilter(Filter):
         self.dither = dither
         self.white_point = white_point
 
-    @ property
+    @property
     def name(self):
         return NAME
 
-    @ property
+    @property
     def params(self):
         params = {
             # input

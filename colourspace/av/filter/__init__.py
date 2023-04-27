@@ -88,7 +88,7 @@ class FilteredStream(Stream):
         # return processed frame
         return self._graph.pull()
 
-    @ property
+    @property
     def position(self):
         return self._stream.position
 
@@ -101,26 +101,26 @@ class FilteredStream(Stream):
 
         return False
 
-    @ property
+    @property
     def frame(self):
         return self._frame
 
-    @ property
+    @property
     def container(self):
         return self._stream.container
 
-    @ property
+    @property
     def width(self):
         return self._stream.width
 
-    @ property
+    @property
     def height(self):
         return self._stream.height
 
-    @ property
+    @property
     def duration(self):
         return self._stream.duration
 
-    @ property
+    @property
     def key_frames(self):
         return self._stream.key_frames
