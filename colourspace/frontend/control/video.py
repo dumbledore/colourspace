@@ -60,7 +60,7 @@ class VideoPanel(wx.Panel):
 
     def _on_paint(self, event):
         # Context for drawing into the frame
-        dc = wx.AutoBufferedPaintDC(self._panel)
+        dc = wx.AutoBufferedPaintDCFactory(self._panel)
 
         # Scale the frame
         frame = self._frame.resize(
