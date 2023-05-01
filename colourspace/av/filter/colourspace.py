@@ -143,6 +143,14 @@ class Profile:
             2 * int(self.primaries == other.primaries) + \
             1 * int(self.transfer == other.transfer)
 
+    @property
+    def name(self):
+        names = [
+            name for name, profile in PROFILES.items() if profile == self
+        ]
+
+        return names[0] if names else "Unknown profile"
+
     @staticmethod
     def from_stream(stream):
         colourspace = stream.info["matrix_coefficients"]
