@@ -136,6 +136,60 @@ class Profile:
             ^ hash(self.primaries) \
             ^ hash(self.transfer)
 
+    def compute_similarity(self, other):
+        # priorities: csp > pri > trc
+        return \
+            4 * int(self.colourspace == other.colourspace) + \
+            2 * int(self.primaries == other.primaries) + \
+            1 * int(self.transfer == other.transfer)
+
+    @staticmethod
+    def from_stream(stream):
+        colourspace = stream.info["matrix_coefficients"]
+        primaries = stream.info["color_primaries"]
+        transfer = stream.info["transfer_characteristics"]
+        range = stream.info["color_range"]
+
+        # Now try matching
+        problems = []
+
+        if colourspace not in INFO_TO_COLOURSPACE:
+            problems += [f"Unsupported colourspace {colourspace}"]
+
+        if primaries not in INFO_TO_PRIMARIES:
+            problems += [f"Unsupported primaries {primaries}"]
+
+        if transfer not in INFO_TO_TRANSFER:
+            problems += [f"Unsupported transfer {transfer}"]
+
+        if range not in INFO_TO_RANGES:
+            problems += [f"Unsupported range {range}"]
+
+        colourspace = INFO_TO_COLOURSPACE.get(colourspace, None)
+        primaries = INFO_TO_PRIMARIES.get(primaries, None)
+        transfer = INFO_TO_TRANSFER.get(transfer, None)
+        range = INFO_TO_RANGES.get(range, None)
+
+        profile = Profile(colourspace, primaries, transfer, range)
+
+        if colourspace and primaries and transfer:
+            # Everything is valid for the profile
+            return profile, problems
+
+        # try to find the closest predefined profile to
+        # fill in the unsupported parameters
+        # create a dict of score -> predefined profile
+        scored_profiles = {profile.compute_similarity(
+            p): p for p in PROFILES.values()}
+        max_score = max(scored_profiles.keys())
+
+        if not max_score:
+            # Nothing matched. Return BT.709 as it is the most common
+            return PROFILES["bt709"], problems
+
+        # return the highes ranking profile
+        return scored_profiles[max_score], problems
+
 
 PROFILES = {
     "bt470m":       Profile("smpte170m", "bt470m", "bt470m"),
