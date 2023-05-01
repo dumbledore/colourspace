@@ -34,7 +34,8 @@ class VideoPanel(wx.Panel):
 
         self._frame = video.frame.to_image()
 
-        self._panel = wx.Panel(self, size=video_size)
+        self._panel = wx.Panel(self, size=video_size,
+                               style=wx.FULL_REPAINT_ON_RESIZE)
         self._panel.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         self._panel.Bind(wx.EVT_PAINT, self._on_paint)
 
