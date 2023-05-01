@@ -22,11 +22,41 @@ COLOURSPACE_SYNONYMS = {
     "bt2020ncl": "bt2020nc",
 }
 
+INFO_TO_COLOURSPACE = {
+    "Identity": "gbr",
+    "BT.709": "bt709",
+    "FCC 73.682": "fcc",
+    "BT.470 System B/G": "bt470bg",
+    "BT.601": "smpte170m",
+    "SMPTE 240M": "smpte240m",
+    "YCgCo": "ycgco",
+    "BT.2020 non-constant": "bt2020nc",  # same as bt2020ncl
+    # "BT.2020 constant": not supported by vf_colorspace
+    # "Y'D'zD'x": not supported by vf_colorspace
+    # "Chromaticity-derived non-constant": not supported by vf_colorspace
+    # "Chromaticity-derived constant": not supported by vf_colorspace
+    # "ICtCp": not supported by vf_colorspace
+}
+
 PRIMARIES = Filter.get_choices_for_option(NAME, "primaries")
 
 # AVCOL_PRI_JEDEC_P22 = AVCOL_PRI_EBU3213,
 PRIMARY_SYNONYMS = {
     "jedec-p22": "ebu3213",
+}
+
+INFO_TO_PRIMARIES = {
+    "BT.709": "bt709",
+    "BT.470 System M": "bt470m",
+    "BT.601 PAL": "bt470bg",
+    "BT.601 NTSC": "smpte170m",
+    "SMPTE 240M": "smpte240m",
+    "Generic film": "film",
+    "BT.2020": "bt2020",
+    "XYZ": "smpte428",
+    "DCI P3": "smpte431",
+    "Display P3": "smpte432",
+    "EBU Tech 3213": "ebu3213",  # same as jedec-p22
 }
 
 # Unsupported transfer characteristics:
@@ -54,10 +84,34 @@ TRANSFER_SYNONYMS = {
     "iec61966-2-4": "xvycc",
 }
 
+INFO_TO_TRANSFER = {
+    "BT.709": "bt709",
+    "BT.470 System M": "bt470m",  # same as gamma22
+    "BT.470 System B/G": "bt470bg",  # same as gamma28
+    "BT.601": "smpte170m",
+    "SMPTE 240M": "smpte240m",
+    "Linear": "linear",
+    # "Logarithmic (100:1)": not supported by vf_colorspace
+    # "Logarithmic (316.22777:1)": not supported by vf_colorspace
+    "xvYCC": ["xvycc", "iec61966-2-4"],
+    # "BT.1361": not supported by vf_colorspace
+    "sRGB/sYCC": ["srgb", "iec61966-2-1"],
+    "BT.2020 (10-bit)": "bt2020-10",
+    "BT.2020 (12-bit)": "bt2020-12",
+    # "PQ": not supported by vf_colorspace
+    # "SMPTE 428M": not supported by vf_colorspace
+    # "HLG": not supported by vf_colorspace
+}
+
 RANGES = (
     "tv",  # tv/mpeg = limited
     "pc",  # pc/jpeg = full
 )
+
+INFO_TO_RANGES = {
+    "Limited": "tv",
+    "Full": "pc",
+}
 
 PROFILE_NAMES = Filter.get_choices_for_option(NAME, "all")
 
