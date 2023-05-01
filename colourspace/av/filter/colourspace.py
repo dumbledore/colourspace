@@ -19,7 +19,7 @@ COLOURSPACES = Filter.get_choices_for_option(NAME, "space")
 # bt2020nc  = AVCOL_SPC_BT2020_NCL
 # bt2020ncl = AVCOL_SPC_BT2020_NCL
 COLOURSPACE_SYNONYMS = {
-    "bt2020nc": "bt2020ncl",
+    "bt2020ncl": "bt2020nc",
 }
 
 PRIMARIES = Filter.get_choices_for_option(NAME, "primaries")
@@ -48,10 +48,10 @@ TRANSFERS = Filter.get_choices_for_option(NAME, "trc")
 # xvycc         = AVCOL_TRC_IEC61966_2_4
 # iec61966-2-4  = AVCOL_TRC_IEC61966_2_4
 TRANSFER_SYNONYMS = {
-    "bt470m": "gamma22",
-    "bt470bg": "gamma28",
-    "srgb": "iec61966-2-1",
-    "xvycc": "iec61966-2-4",
+    "gamma22": "bt470m",
+    "gamma28": "bt470bg",
+    "iec61966-2-1": "srgb",
+    "iec61966-2-4": "xvycc",
 }
 
 RANGES = (
