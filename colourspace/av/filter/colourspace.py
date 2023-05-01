@@ -71,14 +71,14 @@ class Profile:
         self.range = range
 
     def __eq__(self, other):
+        # not comparing the colour range as it is not really
+        # part of the profile
         return (self.colourspace == other.colourspace) \
-            and (self.range == other.range) \
             and (self.primaries == other.primaries) \
             and (self.transfer == other.transfer)
 
     def __hash__(self):
         return hash(self.colourspace) \
-            ^ hash(self.range) \
             ^ hash(self.primaries) \
             ^ hash(self.transfer)
 
