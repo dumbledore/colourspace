@@ -84,22 +84,14 @@ class Profile:
 
 
 PROFILES = {
-    "bt470m":
-        Profile("smpte170m", "bt470m", "bt470m"),
-    "bt470bg":
-        Profile("bt470bg", "bt470bg", "bt470bg"),
-    "bt601-6-525":
-        Profile("smpte170m", "smpte170m", "smpte170m"),
-    "bt601-6-625":
-        Profile("bt470bg", "bt470bg", "smpte170m"),
-    "bt709":
-        Profile("bt709", "bt709", "bt709"),
-    "smpte170m":
-        Profile("smpte170m", "smpte170m", "smpte170m"),
-    "smpte240m":
-        Profile("smpte240m", "smpte240m", "smpte240m"),
-    "bt2020":
-        Profile("bt2020ncl", "bt2020", "bt2020-10"),
+    "bt470m":       Profile("smpte170m", "bt470m", "bt470m"),
+    "bt470bg":      Profile("bt470bg", "bt470bg", "bt470bg"),
+    "bt601-6-525":  Profile("smpte170m", "smpte170m", "smpte170m"),
+    "bt601-6-625":  Profile("bt470bg", "bt470bg", "smpte170m"),
+    "bt709":        Profile("bt709", "bt709", "bt709"),
+    "smpte170m":    Profile("smpte170m", "smpte170m", "smpte170m"),
+    "smpte240m":    Profile("smpte240m", "smpte240m", "smpte240m"),
+    "bt2020":       Profile("bt2020ncl", "bt2020", "bt2020-10"),
 }
 
 DITHER = Filter.get_choices_for_option(NAME, "dither")
