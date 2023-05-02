@@ -149,7 +149,10 @@ class Profile:
             name for name, profile in PROFILES.items() if profile == self
         ]
 
-        return names[0] if names else "Unknown profile"
+        return names[0] if names else "Unknown"
+
+    def __repr__(self):
+        return f"{self.name}: {{ csp={self.colourspace}, prm={self.primaries}, trc={self.transfer}, rng={self.range} }}"
 
     @staticmethod
     def from_stream(stream):
