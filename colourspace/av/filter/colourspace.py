@@ -1,5 +1,7 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
+import copy
+
 from colourspace.av.filter import Filter
 
 NAME = "colorspace"
@@ -194,12 +196,17 @@ class Profile:
             p): p for p in PROFILES.values()}
         max_score = max(scored_profiles.keys())
 
+        # If nothing matched, return BT.709 as it is the most common.
+        # Otherwise return the highes ranking profile.
+        profile = PROFILES["bt709"] if not max_score else scored_profiles[max_score]
         if not max_score:
-            # Nothing matched. Return BT.709 as it is the most common
-            return PROFILES["bt709"], problems
+            return profile, problems
 
-        # return the highes ranking profile
-        return scored_profiles[max_score], problems
+        # Make a copy of the profile to fill in the range
+        profile = copy.copy(profile)
+        profile.range = range
+
+        return profile, problems
 
 
 PROFILES = {
