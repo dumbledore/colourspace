@@ -168,22 +168,20 @@ class Profile:
         # Now try matching
         problems = []
 
-        if colourspace not in INFO_TO_COLOURSPACE:
-            problems += [f"Unsupported colourspace {colourspace}"]
+        def validate_param_(param_name, param_type, valid_names):
+            nonlocal problems
 
-        if primaries not in INFO_TO_PRIMARIES:
-            problems += [f"Unsupported primaries {primaries}"]
+            if not param_name:
+                problems += [f"{param_type} not available"]
+            elif param_name not in valid_names:
+                problems += [f"Unsupported {param_type} `{param_name}`"]
+            else:
+                return valid_names[param_name]
 
-        if transfer not in INFO_TO_TRANSFER:
-            problems += [f"Unsupported transfer {transfer}"]
-
-        if range not in INFO_TO_RANGES:
-            problems += [f"Unsupported range {range}"]
-
-        colourspace = INFO_TO_COLOURSPACE.get(colourspace, None)
-        primaries = INFO_TO_PRIMARIES.get(primaries, None)
-        transfer = INFO_TO_TRANSFER.get(transfer, None)
-        range = INFO_TO_RANGES.get(range, None)
+        colourspace = validate_param_(colourspace, "colourspace", INFO_TO_COLOURSPACE)
+        primaries = validate_param_(primaries, "colour primaries", INFO_TO_PRIMARIES)
+        transfer = validate_param_(transfer, "transfer characteristic", INFO_TO_TRANSFER)
+        range = validate_param_(range, "range", INFO_TO_RANGES)
 
         profile = Profile(colourspace, primaries, transfer, range)
 
