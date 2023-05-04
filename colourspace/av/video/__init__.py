@@ -11,7 +11,7 @@ class VideoStream(Stream):
         self._frame = self._get_frame()
         self._position = 0
         self._key_frames = [float(p.pts * p.time_base)
-                            for p in stream.container.demux(stream) if p.is_keyframe]
+                            for p in stream.container.demux(stream) if p.is_keyframe] if container.seekable else []
         # rewind container
         container.seek(0)
 

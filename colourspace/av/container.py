@@ -57,11 +57,19 @@ class Container():
     def seek(self, position=0):
         """Seek all streams to a key frame. Defaults to start of file."""
 
-        # Convert to US
-        position = int(position * av.time_base)
+        # Only seek for seekable containers. Otherwise FFmpeg may return
+        # 'operation not supported'.
+        if self.seekable:
+            # Convert to US
+            position = int(position * av.time_base)
 
-        # Seek entire container (all streams) to a key frame
-        self._container.seek(position)
+            # Seek entire container (all streams) to a key frame
+            self._container.seek(position)
+
+    @property
+    def seekable(self):
+        """Returns true if the container is seekable (contains a proper video)"""
+        return bool(self._container.duration)
 
     @property
     def streams(self):
