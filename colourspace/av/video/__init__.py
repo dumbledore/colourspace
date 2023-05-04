@@ -40,7 +40,7 @@ class VideoStream(Stream):
             # Decode all frames in this packet that we just demuxed
             for frame in packet.decode():
                 # Convert the decoded frame postion to seconds
-                frame_pos = float(frame.pts * frame.time_base)
+                frame_pos = float(frame.pts * frame.time_base) if frame.pts else 0
 
                 if frame_pos > position:
                     # This frame is JUST pass the position in time
