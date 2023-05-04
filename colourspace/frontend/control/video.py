@@ -29,7 +29,13 @@ class VideoPanel(wx.Panel):
         # calculate appropriate initial size for the video panel
         video_size = (video.width, video.height)
         divisor = max(video_size) // size_divisor
-        video_size = [s // divisor for s in video_size]
+
+        if divisor:
+            # only scale by divisor if the max video dimension
+            # is actually bigger than size_divisor itself,
+            # otherwise divisor will be zero
+            video_size = [s // divisor for s in video_size]
+
         video_size = self.FromDIP(video_size)
 
         self._frame = video.frame.to_image()
