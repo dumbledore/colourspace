@@ -46,18 +46,25 @@ class VideoPanel(wx.Panel):
         self._panel.Bind(wx.EVT_PAINT, self._on_paint)
 
         duration = int(video.duration * 1000)  # in ms
-        self._slider = wx.Slider(
-            self, maxValue=duration, style=wx.SL_HORIZONTAL | wx.SL_AUTOTICKS)
-        self._slider.ClearTicks()
-        for pts in video.key_frames:
-            self._slider.SetTick(int(pts * 1000))
 
-        self._slider.Bind(wx.EVT_SLIDER, self._on_seek)
+        if video.container.seekable:
+            self._slider = wx.Slider(
+                self, maxValue=duration, style=wx.SL_HORIZONTAL | wx.SL_AUTOTICKS)
+            self._slider.ClearTicks()
+            for pts in video.key_frames:
+                self._slider.SetTick(int(pts * 1000))
+
+            self._slider.Bind(wx.EVT_SLIDER, self._on_seek)
+        else:
+            self._slider = None
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self._panel, 1, wx.EXPAND)
-        sizer.AddSpacer(VideoPanel.SPACER)
-        sizer.Add(self._slider, 0, wx.EXPAND)
+
+        if self._slider:
+            sizer.AddSpacer(VideoPanel.SPACER)
+            sizer.Add(self._slider, 0, wx.EXPAND)
+
         self.SetSizerAndFit(sizer)
 
     @property
@@ -94,7 +101,9 @@ class VideoPanel(wx.Panel):
         aspect_ratio = self.video.height / self.video.width
         width, height = size
         height = int(width * aspect_ratio)
-        height += VideoPanel.SPACER
-        height += self._slider.GetClientSize()[1]
+
+        if self._slider:
+            height += VideoPanel.SPACER
+            height += self._slider.GetClientSize()[1]
 
         return (width, height)
