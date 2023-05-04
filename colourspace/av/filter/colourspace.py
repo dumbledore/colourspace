@@ -158,10 +158,12 @@ class Profile:
 
     @staticmethod
     def from_stream(stream):
-        colourspace = stream.info["matrix_coefficients"]
-        primaries = stream.info["color_primaries"]
-        transfer = stream.info["transfer_characteristics"]
-        range = stream.info["color_range"]
+        # get colour profile parameters and do not raise
+        # if they are not available in the metadata
+        colourspace = stream.info.get("matrix_coefficients")
+        primaries = stream.info.get("color_primaries")
+        transfer = stream.info.get("transfer_characteristics")
+        range = stream.info.get("color_range")
 
         # Now try matching
         problems = []
