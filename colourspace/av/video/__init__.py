@@ -15,6 +15,15 @@ class VideoStream(Stream):
         # rewind container
         container.seek(0)
 
+        # calculate and cache duration
+        if self._stream.duration:
+            # obtain directly from FFmpeg video stream
+            self._duration = float(self._stream.duration * self._stream.time_base)
+        else:
+            # sometimes (e.g. for FLV) the stream duration may be None.
+            # fall back to MediaInfo
+            self._duration = self.info.get("duration", 0) / 1000
+
     def _get_frame(self, position=0):
         # Crude seek to a key frame
         self._container.seek(position)
@@ -77,7 +86,7 @@ class VideoStream(Stream):
 
     @property
     def duration(self):
-        return float(self._stream.duration * self._stream.time_base)
+        return self._duration
 
     @property
     def key_frames(self):
