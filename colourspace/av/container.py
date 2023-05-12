@@ -31,6 +31,11 @@ class Container():
             streams = [(v, tracks[v.id]) for v in container.streams.video]
 
         self._container = container
+
+        # Videos without a duration and images are not seekable
+        self._seekable = bool(container.duration) and any(
+            True for v, i in streams if i.track_type == "Video")
+
         self._streams = [VideoStream(self, v, vars(i)) for v, i in streams]
 
     # Explicit close
@@ -69,7 +74,7 @@ class Container():
     @property
     def seekable(self):
         """Returns true if the container is seekable (contains a proper video)"""
-        return bool(self._container.duration)
+        return self._seekable
 
     @property
     def streams(self):
