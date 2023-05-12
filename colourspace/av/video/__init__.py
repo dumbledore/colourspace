@@ -1,5 +1,7 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
+import av
+
 from colourspace.av.stream import Stream
 
 
@@ -21,12 +23,8 @@ class VideoStream(Stream):
             self._duration = float(self._stream.duration * self._stream.time_base)
         else:
             # sometimes (e.g. for FLV) the stream duration may be None.
-            # fall back to MediaInfo.
-            duration = self.info.get("duration", 0)
-
-            # Sometimes, MediaInfo may return it as a string, e.g. '66.000'
-            # which is a float in seconds, otherwise it is in millis
-            self._duration = duration / 1000 if isinstance(duration, int) else float(duration)
+            # fall back to the duration of the container
+            self._duration = self._container.duration
 
     def _get_frame(self, position=0):
         # Crude seek to a key frame
