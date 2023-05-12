@@ -8,4 +8,4 @@ def time_format(seconds):
     mins = (seconds % 3600) // 60
     secs = (seconds % 3600) % 60
 
-    return f"{hrs:02d}:{mins:02d}:{secs:02d}.{int(seconds_r * 1000):d}"
+    return f"{hrs:02d}:{mins:02d}:{secs:02d}.{int(seconds_r * 1000):03d}"
