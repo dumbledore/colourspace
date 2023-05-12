@@ -77,6 +77,11 @@ class Container():
         return self._seekable
 
     @property
+    def duration(self):
+        """Returns the duration of the container"""
+        return float(self._container.duration / av.time_base) if self._container.duration else 0
+
+    @property
     def streams(self):
         """Returns a list of available video / image streams"""
         return list(self._streams)
