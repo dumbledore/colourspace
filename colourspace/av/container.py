@@ -32,6 +32,9 @@ class Container():
 
         self._container = container
 
+        # Cache the duration at creation
+        self._duration = float(container.duration / av.time_base) if container.duration else 0
+
         # Videos without a duration and images are not seekable
         self._seekable = bool(container.duration) and any(
             True for v, i in streams if i.track_type == "Video")
@@ -79,7 +82,7 @@ class Container():
     @property
     def duration(self):
         """Returns the duration of the container"""
-        return float(self._container.duration / av.time_base) if self._container.duration else 0
+        return self._duration
 
     @property
     def streams(self):
