@@ -29,6 +29,7 @@ class Container():
         if self._seekable:
             try:
                 container.seek(0)
+                container.seek(container.duration / 2)
             except:
                 self._seekable = False
 
