@@ -39,6 +39,13 @@ class Container():
         self._seekable = bool(container.duration) and any(
             True for v, i in streams if i.track_type == "Video")
 
+        # Make sure seeking actually works, if it is supposed to be seekable
+        if self._seekable:
+            try:
+                container.seek(0)
+            except:
+                self._seekable = False
+
         self._streams = [VideoStream(self, v, vars(i)) for v, i in streams]
 
     # Explicit close
