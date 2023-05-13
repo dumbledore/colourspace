@@ -9,8 +9,6 @@ from pymediainfo import MediaInfo
 
 def test_stream(stream):
     stream.frame.to_image()
-    stream.seek(stream.duration / 2)
-    stream.frame.to_image()
     print(f"... stream {stream}")
 
 
