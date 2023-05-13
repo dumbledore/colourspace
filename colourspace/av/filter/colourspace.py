@@ -95,9 +95,9 @@ INFO_TO_TRANSFER = {
     "Linear": "linear",
     # "Logarithmic (100:1)": not supported by vf_colorspace
     # "Logarithmic (316.22777:1)": not supported by vf_colorspace
-    "xvYCC": ["xvycc", "iec61966-2-4"],
+    "xvYCC": "xvycc",
     # "BT.1361": not supported by vf_colorspace
-    "sRGB/sYCC": ["srgb", "iec61966-2-1"],
+    "sRGB/sYCC": "srgb",
     "BT.2020 (10-bit)": "bt2020-10",
     "BT.2020 (12-bit)": "bt2020-12",
     # "PQ": not supported by vf_colorspace
