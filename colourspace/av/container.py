@@ -11,11 +11,19 @@ class Container():
         container = av.open(filename)
         info = MediaInfo.parse(filename)
 
+        # If it has image tracks, we treat it as an image-only
+        # and observe only those tracks. This is necessary as in PyAV
+        # there are no image tracks, only video tracks, and images simply
+        # use the video tracks
+        tracks = info.image_tracks if info.image_tracks else info.video_tracks
+
         # Cache the duration at creation
         self._duration = float(container.duration / av.time_base) if container.duration else 0
 
         # Videos without a duration and images are not seekable
-        self._seekable = bool(container.duration)
+        self._seekable = bool(container.duration) and any(
+            # Images may report as seekable, but are not
+            True for t in tracks if t.track_type == "Video")
 
         # Make sure seeking actually works, if it is supposed to be seekable
         if self._seekable:
@@ -27,12 +35,6 @@ class Container():
             # Re-open container, as a bad seek may lead to decoding return no frames
             container.close()
             container = av.open(filename)
-
-        # If it has image tracks, we treat it as an image-only
-        # and observe only those tracks. This is necessary as in PyAV
-        # there are no image tracks, only video tracks, and images simply
-        # use the video tracks
-        tracks = info.image_tracks if info.image_tracks else info.video_tracks
 
         # If there is only one track, disregard the ID.
         # This is needed for images, as there is only one image track
@@ -46,10 +48,6 @@ class Container():
 
             # now create the (stream, track) pairs
             streams = [(v, tracks[v.id]) for v in container.streams.video]
-
-        # Images may report as seekable, but are not
-        if self._seekable and not any(True for v, i in streams if i.track_type == "Video"):
-            self._seekable = False
 
         self._container = container
         self._streams = [VideoStream(self, v, vars(i)) for v, i in streams]
