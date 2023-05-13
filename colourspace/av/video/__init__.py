@@ -62,7 +62,7 @@ class VideoStream(Stream):
 
     def seek(self, position=0):
         # Actually seek only if position has changed or decoding for the first time
-        if position != self._position or not self._frame:
+        if not self._frame or (self._container.seekable and position != self._position):
             self._position = position
             self._frame = self._get_frame(position)
             return True
