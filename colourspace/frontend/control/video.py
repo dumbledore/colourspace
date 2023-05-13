@@ -18,7 +18,7 @@ class VideoPanel(wx.Panel):
     def __init__(self, parent,
                  video,
                  resize_quality=Image.LINEAR,
-                 size_divisor=640,
+                 initial_min_max_size=(320, 640),
                  *args, **kwargs):
 
         super().__init__(parent, *args, **kwargs)
@@ -28,13 +28,15 @@ class VideoPanel(wx.Panel):
 
         # calculate appropriate initial size for the video panel
         video_size = (video.width, video.height)
-        divisor = max(video_size) // size_divisor
+        initial_min, initial_max = initial_min_max_size
 
-        if divisor:
-            # only scale by divisor if the max video dimension
-            # is actually bigger than size_divisor itself,
-            # otherwise divisor will be zero
+        if max(video_size) > initial_max:
+            divisor = max(video_size) // initial_max
             video_size = [s // divisor for s in video_size]
+        elif max(video_size) < initial_min:
+            multiplier = initial_min // max(video_size)
+            print(multiplier)
+            video_size = [s * multiplier for s in video_size]
 
         video_size = self.FromDIP(video_size)
 

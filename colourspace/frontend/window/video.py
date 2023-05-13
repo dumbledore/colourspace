@@ -10,7 +10,7 @@ from PIL import Image
 class VideoFrame(wx.Frame):
     def __init__(self, video=None,
                  resize_quality=Image.LINEAR,
-                 size_divisor=640,
+                 initial_min_max_size=(320, 640),
                  *args, **kwargs):
 
         title = video.container.filename if video else "Untitled"
@@ -20,7 +20,7 @@ class VideoFrame(wx.Frame):
 
         if video:
             self._has_video = True
-            self._video = VideoPanel(self, video, resize_quality, size_divisor)
+            self._video = VideoPanel(self, video, resize_quality, initial_min_max_size)
         else:
             self._has_video = False
             size = self.FromDIP((640, 480))
