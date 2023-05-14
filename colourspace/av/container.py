@@ -48,8 +48,14 @@ class Container():
             # Reshape the tracks into a {id: track}
             tracks = {t.track_id: t for t in tracks}
 
-            # now create the (stream, track) pairs
-            streams = [(v, tracks[v.id]) for v in container.streams.video]
+            # Now create the (stream, track) pairs
+
+            # Directly use the ID for container formats that support IDs,
+            # e.g. MOV, MPEG, etc., see AVFMT_SHOW_IDS.
+            # If IDs are not supported, assume the ID from the index the way
+            # MediaInfo expects them to be
+            streams = [(v, tracks[v.id if container.format.show_ids else v.index + 1])
+                       for v in container.streams.video]
 
         self._container = container
         self._streams = [VideoStream(self, v, vars(i)) for v, i in streams]
