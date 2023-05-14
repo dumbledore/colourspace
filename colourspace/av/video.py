@@ -51,6 +51,7 @@ class VideoStream(Stream):
         # before overrunning the position being sought, thus the correct frame to return
         previous_video_frame = None
 
+        # Retry until finding a frame or reaching EOF
         while not previous_video_frame:
             try:
                 # Demux the container and get the next pack for this video stream
@@ -68,6 +69,9 @@ class VideoStream(Stream):
 
                         # Cache this current frame
                         previous_video_frame = frame
+
+                # no more frames (EOF), return whatever was last
+                return previous_video_frame
             except FFmpegError as ex:
                 # EOFErrors inherits from FFmpegError, but should not be caught
                 if isinstance(ex, EOFError):
@@ -76,7 +80,9 @@ class VideoStream(Stream):
                 print(ex, file=sys.stderr)
                 self._has_errors = True
 
-        # no more frames (EOF), return whatever was last
+        # This may be reached if a frame was successfully decoded,
+        # i.e. previous_video_frame is not None, yet there was an
+        # exception.
         return previous_video_frame
 
     @property
