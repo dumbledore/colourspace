@@ -94,8 +94,7 @@ class FilteredStream(Stream):
 
     def seek(self, position=0):
         if self._stream.seek(position):
-            # Sub-stream has frame has changed
-            # Re-acquire and re-process
+            # Substream's frame has changed: reacquire and reprocess
             self._frame = self._get_frame()
             return True
 
