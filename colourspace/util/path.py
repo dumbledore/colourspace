@@ -3,11 +3,19 @@
 import os
 
 
-def walk_files(path):
+def walk_files(path, skipped=[]):
     files = []
+
+    # Convert any skipped to absolute
+    skipped = [
+        os.path.abspath(os.path.join(path, f) if not os.path.isabs(path) else f)
+        for f in skipped
+    ]
 
     for root, dirs, files_in_dir in os.walk(path):
         for filename in files_in_dir:
-            files.append(os.path.join(root, filename))
+            filename = os.path.abspath(os.path.join(root, filename))
+            if filename not in skipped:
+                files.append(filename)
 
     return files
