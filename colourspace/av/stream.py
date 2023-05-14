@@ -43,3 +43,4 @@ class Stream():
     @property
     def info(self):
         """Returns a dict of metadata for this stream"""
+        raise NotImplementedError()
