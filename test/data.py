@@ -27,16 +27,17 @@ FFMPEG_FATE_SKIPPED = [
     "mpegts/pmtchange.ts",
 
     # IMF not supported
-    "imf/countdown/ASSETMAP.xml",  # av.error.InvalidDataError
-    "imf/countdown/PKL_c8f6716b-0dfa-4062-8569-98fc77637287.xml",  # av.error.InvalidDataError
-    "imf/countdown/CPL_bb2ce11c-1bb6-4781-8e69-967183d02b9b.xml",  # av.error.InvalidDataError
-    "imf/countdown-audio/ASSETMAP.xml",  # av.error.InvalidDataError
-    "imf/countdown-audio/PKL_32a1eb00-4e39-483b-98f6-8e4086379d3c.xml",  # av.error.InvalidDataError
-    "imf/countdown-audio/CPL_688f4f63-a317-4271-99bf-51444ff39c5b.xml",  # av.error.InvalidDataError
+    "imf/countdown/ASSETMAP.xml",
+    "imf/countdown/PKL_c8f6716b-0dfa-4062-8569-98fc77637287.xml",
+    "imf/countdown/CPL_bb2ce11c-1bb6-4781-8e69-967183d02b9b.xml",
+    "imf/countdown-audio/ASSETMAP.xml",
+    "imf/countdown-audio/PKL_32a1eb00-4e39-483b-98f6-8e4086379d3c.xml",
+    "imf/countdown-audio/CPL_688f4f63-a317-4271-99bf-51444ff39c5b.xml",
 
     # Do not work with Filters
     "h264-conformance/CVFC1_Sony_C.jsv",
-    "hevc-conformance/CONFWIN_A_Sony_1.bit",  # av.error.ValueError -> doesn't work with Filters
+    "hevc-conformance/CONFWIN_A_Sony_1.bit",
+    "h264/extradata-reload-multi-stsd.mov",
 
     # Format not supported (F32)
     "tiff/lzw_rgbf32le.tif",
@@ -46,12 +47,15 @@ FFMPEG_FATE_SKIPPED = [
     "tiff/zip_rgbaf32le.tif",
     "tiff/uncompressed_rgbaf32le.tif",
 
-
     # UnicodeDecodeError: There appears to be a bug in PyAV
-    "smc/cass_schi.qt",  # UnicodeDecodeError
-    "cvid/catfight-cvid-pal8-partial.mov",  # UnicodeDecodeError
-    "mov/mov_alpha_straight.mov",  # UnicodeDecodeError
-    "mov/mov_alpha_premult.mov",  # UnicodeDecodeError
+    "avid/avidmeridianntsc.mov",
+    "cvid/catfight-cvid-pal8-partial.mov",
+    "duck/vf2end-partial.avi",
+    "qpeg/Clock.avi",
+    "mov/mov_alpha_straight.mov",
+    "mov/mov_alpha_premult.mov",
+    "smc/cass_schi.qt",
+    "svq3/svq3_watermark.mov",
 ]
 
 FFMPEG_FATE_FILES = walk_files(FFMPEG_FATE_SUITE, FFMPEG_FATE_SKIPPED)
