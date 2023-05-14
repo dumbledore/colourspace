@@ -1,7 +1,8 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
-import av
+import sys
 
+from av.error import FFmpegError
 from colourspace.av.stream import Stream
 
 
@@ -12,10 +13,19 @@ class VideoStream(Stream):
         self._info = info
         self._frame = self._get_frame()
         self._position = 0
-        self._key_frames = [float(p.pts * p.time_base)
-                            for p in stream.container.demux(stream) if p.is_keyframe] if container.seekable else []
-        # rewind container
-        container.seek(0)
+        self._key_frames = []
+        self._has_errors = False
+
+        if container.seekable:
+            try:
+                # This may fail on corrupt videos, so let's make it optional
+                self._key_frames = [float(p.pts * p.time_base)
+                                    for p in stream.container.demux(stream) if p.is_keyframe]
+            except FFmpegError:
+                print("Could not obtain keyframes", file=sys.stderr)
+
+            # rewind container
+            container.seek(0)
 
         # calculate and cache duration
         if self._stream.duration:
