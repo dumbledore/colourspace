@@ -3,11 +3,15 @@
 import sys
 
 from av.error import FFmpegError
+from colourspace.av.exception import AVException
 from colourspace.av.stream import Stream
 
 
 class VideoStream(Stream):
     def __init__(self, container, stream, info):
+        if not stream.codec_context:
+            raise AVException(f"Unsupported codec {info.get('codec_id', '')}")
+
         self._container = container
         self._stream = stream
         self._info = info
