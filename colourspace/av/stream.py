@@ -44,3 +44,8 @@ class Stream():
     def info(self):
         """Returns a dict of metadata for this stream"""
         raise NotImplementedError()
+
+    @property
+    def has_errors(self):
+        """Returns true if there were any errors during decoding"""
+        raise NotImplementedError()

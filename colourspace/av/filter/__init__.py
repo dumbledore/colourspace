@@ -128,3 +128,7 @@ class FilteredStream(Stream):
     @property
     def info(self):
         return self._stream.info
+
+    @property
+    def has_errors(self):
+        return self._stream.has_errors

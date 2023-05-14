@@ -51,21 +51,30 @@ class VideoStream(Stream):
         # before overrunning the position being sought, thus the correct frame to return
         previous_video_frame = None
 
-        # Demux the container and get the next pack for this video stream
-        for packet in self._stream.container.demux(self._stream):
-            # Decode all frames in this packet that we just demuxed
-            for frame in packet.decode():
-                # Convert the decoded frame postion to seconds
-                frame_pos = float(frame.pts * frame.time_base) if frame.pts else 0
+        while not previous_video_frame:
+            try:
+                # Demux the container and get the next pack for this video stream
+                for packet in self._stream.container.demux(self._stream):
+                    # Decode all frames in this packet that we just demuxed
+                    for frame in packet.decode():
+                        # Convert the decoded frame postion to seconds
+                        frame_pos = float(frame.pts * frame.time_base) if frame.pts else 0
 
-                if frame_pos > position:
-                    # This frame is JUST pass the position in time
-                    # Return the previously devode frame, or this one if
-                    # it was the first one anyway
-                    return previous_video_frame if previous_video_frame else frame
+                        if frame_pos > position:
+                            # This frame is JUST pass the position in time
+                            # Return the previously devode frame, or this one if
+                            # it was the first one anyway
+                            return previous_video_frame if previous_video_frame else frame
 
-                # Cache this current frame
-                previous_video_frame = frame
+                        # Cache this current frame
+                        previous_video_frame = frame
+            except FFmpegError as ex:
+                # EOFErrors inherits from FFmpegError, but should not be caught
+                if isinstance(ex, EOFError):
+                    raise ex
+
+                print(ex, file=sys.stderr)
+                self._has_errors = True
 
         # no more frames (EOF), return whatever was last
         return previous_video_frame
@@ -111,3 +120,7 @@ class VideoStream(Stream):
     @property
     def info(self):
         return self._info
+
+    @property
+    def has_errors(self):
+        return self._has_errors
