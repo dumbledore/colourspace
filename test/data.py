@@ -49,16 +49,6 @@ FFMPEG_FATE_SKIPPED = [
     "tiff/lzw_rgbaf32le.tif",
     "tiff/zip_rgbaf32le.tif",
     "tiff/uncompressed_rgbaf32le.tif",
-
-    # UnicodeDecodeError: There appears to be a bug in PyAV
-    "avid/avidmeridianntsc.mov",
-    "cvid/catfight-cvid-pal8-partial.mov",
-    "duck/vf2end-partial.avi",
-    "qpeg/Clock.avi",
-    "mov/mov_alpha_straight.mov",
-    "mov/mov_alpha_premult.mov",
-    "smc/cass_schi.qt",
-    "svq3/svq3_watermark.mov",
 ]
 
 FFMPEG_FATE_FILES = walk_files(FFMPEG_FATE_SUITE, FFMPEG_FATE_SKIPPED)
