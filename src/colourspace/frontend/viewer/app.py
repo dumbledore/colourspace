@@ -11,7 +11,7 @@ from colourspace.frontend.window.video import VideoFrame
 def main():
     app = wx.App()
 
-    container = Container("../data/IMG_5568.MOV")
+    container = Container("../../data/IMG_5568.MOV")
     stream = container.streams[0]
 
     stream_profile, profile_errors = Profile.from_stream(stream)
