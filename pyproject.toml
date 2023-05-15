@@ -34,4 +34,4 @@ dev = ["autopep8", "pytest"]
 Homepage = "https://github.com/dumbledore/colourspace"
 
 [project.scripts]
-realpython = "colourspace.frontend.viewer.app:main"
+colourview = "colourspace.frontend.viewer.app:main"
