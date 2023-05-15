@@ -26,6 +26,9 @@ FFMPEG_FATE_SKIPPED = [
     "mov/mp4-with-mov-in24-ver.mp4",
     "mpegts/pmtchange.ts",
 
+    # Seeking fails with av.error.PermissionError
+    "sipr/sipr_5k0.rm",
+
     # IMF not supported
     "imf/countdown/ASSETMAP.xml",
     "imf/countdown/PKL_c8f6716b-0dfa-4062-8569-98fc77637287.xml",
