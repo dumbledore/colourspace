@@ -71,7 +71,7 @@ class VideoStream(Stream):
                         previous_video_frame = frame
 
                 # no more frames (EOF), return whatever was last
-                return previous_video_frame
+                return previous_video_frame if previous_video_frame else self._frame
             except FFmpegError as ex:
                 # EOFErrors inherits from FFmpegError, but should not be caught
                 if isinstance(ex, EOFError):
@@ -83,7 +83,7 @@ class VideoStream(Stream):
         # This may be reached if a frame was successfully decoded,
         # i.e. previous_video_frame is not None, yet there was an
         # exception.
-        return previous_video_frame
+        return previous_video_frame if previous_video_frame else self._frame
 
     @property
     def position(self):
