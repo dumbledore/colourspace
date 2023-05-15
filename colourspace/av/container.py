@@ -8,7 +8,7 @@ from pymediainfo import MediaInfo
 
 class Container():
     def __init__(self, filename):
-        container = av.open(filename)
+        container = av.open(filename, metadata_errors="ignore")
         info = MediaInfo.parse(filename)
 
         # If it has image tracks, we treat it as an image-only
@@ -36,7 +36,7 @@ class Container():
 
             # Re-open container, as a bad seek may lead to decoding return no frames
             container.close()
-            container = av.open(filename)
+            container = av.open(filename, metadata_errors="ignore")
 
         # If there is only one track, disregard the ID.
         # This is needed for images, as there is only one image track
