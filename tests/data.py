@@ -2,8 +2,11 @@
 
 from colourspace.util.path import walk_files
 from pymediainfo import MediaInfo
+from subprocess import check_call
 
-FFMPEG_FATE_SUITE = "../external/FFmpeg/fate-suite"
+FFMPEG_FATE_SUITE_URL = "rsync://fate-suite.ffmpeg.org/fate-suite/"
+
+FFMPEG_FATE_SUITE = "tests/data"
 
 FFMPEG_FATE_SKIPPED = [
     # VQC1 supported by FFmpeg, but not by PyAV
@@ -51,6 +54,14 @@ FFMPEG_FATE_SKIPPED = [
     "tiff/zip_rgbaf32le.tif",
     "tiff/uncompressed_rgbaf32le.tif",
 ]
+
+# Make sure it is rsynced
+# Check fate-rsync target in FFmpeg/tests/Makefile
+check_call([
+    "rsync",
+    "-vrltLW", "--timeout=60",
+    FFMPEG_FATE_SUITE_URL, FFMPEG_FATE_SUITE
+])
 
 FFMPEG_FATE_FILES = walk_files(FFMPEG_FATE_SUITE, FFMPEG_FATE_SKIPPED)
 

@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# r-synced test files from FFmpeg
+tests/data
+tests/data/
