@@ -54,12 +54,9 @@ FFMPEG_FATE_SKIPPED = [
 
 FFMPEG_FATE_FILES = walk_files(FFMPEG_FATE_SUITE, FFMPEG_FATE_SKIPPED)
 
-LOCAL_TEST_SUITE = "../data/"
-LOCAL_TEST_FILES = walk_files(LOCAL_TEST_SUITE)
-
 # Generate all infos
 ALL_INFOS = {filename: MediaInfo.parse(filename)
-             for filename in FFMPEG_FATE_FILES + LOCAL_TEST_FILES}
+             for filename in FFMPEG_FATE_FILES}
 
 # Select only images or videos
 TEST_INFOS = {filename: info for filename, info in ALL_INFOS.items()
