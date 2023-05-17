@@ -8,7 +8,7 @@ def walk_files(path, skipped=[]):
 
     # Convert any skipped to absolute
     skipped = [
-        os.path.abspath(os.path.join(path, f) if not os.path.isabs(path) else f)
+        os.path.abspath(os.path.join(path, f)) if not os.path.isabs(f) else f
         for f in skipped
     ]
 
