@@ -15,6 +15,7 @@ class VideoStream(Stream):
         self._container = container
         self._stream = stream
         self._info = info
+        self._frame = None
         self._frame = self._get_frame()
         self._position = 0
         self._key_frames = []
