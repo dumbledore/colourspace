@@ -53,6 +53,12 @@ FFMPEG_FATE_SKIPPED = [
     "tiff/lzw_rgbaf32le.tif",
     "tiff/zip_rgbaf32le.tif",
     "tiff/uncompressed_rgbaf32le.tif",
+
+    # Frame size change (not going to support it)
+    "hevc/extradata-reload-multi-stsd.mov",
+    "dpx/lena_4x_concat.dpx",
+    "vp8/frame_size_change.webm",
+    "vp9-test-vectors/vp90-2-05-resize.ivf",
 ]
 
 # Make sure it is rsynced
