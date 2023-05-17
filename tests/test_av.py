@@ -10,9 +10,10 @@ from PIL import Image
 
 
 def check_frame(stream):
-    image = stream.frame.to_image()
+    frame = stream.frame
+    assert frame, "No frame available"
 
-    assert image, "No frame available"
+    image = stream.frame.to_image()
     assert type(image) == Image.Image, "Returned frame is wrong type"
     assert image.size == (stream.width, stream.height), "Wrong frame size"
 
