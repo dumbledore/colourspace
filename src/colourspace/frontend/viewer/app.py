@@ -8,22 +8,26 @@ from colourspace.av.filter.colourspace import ColourspaceFilter, Profile, PROFIL
 from colourspace.frontend.window.video import VideoFrame
 
 
+class App(wx.App):
+    def OnInit(self):
+        container = Container("../../data/IMG_5568.MOV")
+        stream = container.streams[0]
+
+        stream_profile, profile_errors = Profile.from_stream(stream)
+        if profile_errors:
+            print(profile_errors)
+        print(f"Selected input profile: {stream_profile}")
+        filter = ColourspaceFilter(stream_profile, PROFILES["bt709"])
+        stream = FilteredStream(stream, [filter])
+        frame = VideoFrame(stream)
+        frame.Center()
+        frame.Show()
+
+        return True
+
+
 def main():
-    app = wx.App()
-
-    container = Container("../../data/IMG_5568.MOV")
-    stream = container.streams[0]
-
-    stream_profile, profile_errors = Profile.from_stream(stream)
-    if profile_errors:
-        print(profile_errors)
-    print(f"Selected input profile: {stream_profile}")
-    filter = ColourspaceFilter(stream_profile, PROFILES["bt709"])
-    stream = FilteredStream(stream, [filter])
-    frame = VideoFrame(stream)
-    frame.Center()
-    frame.Show()
-
+    app = App()
     app.MainLoop()
 
 
