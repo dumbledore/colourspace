@@ -1,6 +1,7 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
 import os
+import sys
 import wx
 
 from colourspace.av.container import Container
@@ -51,7 +52,15 @@ class App(wx.App):
 
 def main():
     app = App()
-    app.Open()
+
+    if sys.argv[1:]:
+        # Open all files passed by command line
+        for filename in sys.argv[1:]:
+            app.Open(filename)
+    else:
+        # No args specified, open an empty window
+        app.Open()
+
     app.MainLoop()
 
 
