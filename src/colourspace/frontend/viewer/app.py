@@ -39,7 +39,7 @@ class App(wx.App):
                                  "Failed to open file", wx.OK | wx.CENTER | wx.ICON_ERROR).ShowModal()
                 return None
 
-        frame = VideoFrame(stream)
+        frame = VideoFrame(self, stream)
         frame.Center()
         frame.Show()
         self._opened[filename] = frame

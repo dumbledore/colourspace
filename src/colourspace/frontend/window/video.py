@@ -3,12 +3,13 @@
 import wx
 
 from colourspace.frontend.control.video import VideoPanel, EVT_VIDEO_SEEK
+from colourspace.frontend.util.drop import Drop
 from colourspace.util.time import time_format
 from PIL import Image
 
 
 class VideoFrame(wx.Frame):
-    def __init__(self, video=None,
+    def __init__(self, app, video=None,
                  resize_quality=Image.LINEAR,
                  initial_min_max_size=(320, 640),
                  *args, **kwargs):
@@ -34,6 +35,7 @@ class VideoFrame(wx.Frame):
         self.Bind(wx.EVT_CLOSE, self._on_close)
         self.Bind(wx.EVT_SIZE, self._on_size)
         self.Bind(EVT_VIDEO_SEEK, self._on_video_seek)
+        self.SetDropTarget(Drop(app))
 
     def _on_close(self, event):
         if self._has_video:
