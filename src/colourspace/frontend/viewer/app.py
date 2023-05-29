@@ -38,6 +38,15 @@ class App(wx.App):
                 wx.MessageDialog(None, f"Failed to open '{os.path.basename(filename)}: {e}'",
                                  "Failed to open file", wx.OK | wx.CENTER | wx.ICON_ERROR).ShowModal()
                 return None
+        else:
+            # Make sure all Falsy filenames converge into a single window
+            filename = None
+
+        if None in self._opened:
+            # Opening a new one, which is not empty.
+            # Make sure we've closed the empty window.
+            self._opened[None].Close()
+            del self._opened[None]
 
         frame = VideoFrame(self, stream)
         frame.Center()
