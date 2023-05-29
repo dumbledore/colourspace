@@ -58,6 +58,9 @@ class App(wx.App):
         self._opened = {}
         return True
 
+    def OnCloseWindow(self, filename):
+        del self._opened[filename]
+
 
 def main():
     app = App()

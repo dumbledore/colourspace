@@ -17,6 +17,7 @@ class VideoFrame(wx.Frame):
         title = video.container.filename if video else "Untitled"
         super().__init__(None, title=title, *args, **kwargs)
 
+        self._app = app
         self._statusbar = self.CreateStatusBar(2)
 
         if video:
@@ -40,7 +41,9 @@ class VideoFrame(wx.Frame):
     def _on_close(self, event):
         if self._has_video:
             # close the container w/o waiting for dtr
+            filename = self._video.video.container.filename
             self._video.video.container.close()
+            self._app.OnCloseWindow(filename)
 
         # Skip the event so that it is handled correctly by somebody else
         event.Skip()
