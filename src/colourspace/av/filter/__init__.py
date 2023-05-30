@@ -42,6 +42,20 @@ class Filter:
             params[name] = value
 
 
+class SimpleFilter(Filter):
+    def __init__(self, name, params=None):
+        self._name = name
+        self._params = params
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def params(self):
+        return self._params
+
+
 class FilteredStream(Stream):
     def __init__(self, stream, filters, dimensions=None):
         self._stream = stream
