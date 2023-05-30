@@ -43,9 +43,10 @@ class Filter:
 
 
 class FilteredStream(Stream):
-    def __init__(self, stream, filters):
+    def __init__(self, stream, filters, dimensions=None):
         self._stream = stream
         self._filters = filters
+        self._dimensions = dimensions
 
         # Create the filter graph:
         # input buffer -> filter 1 -> filter 2 -> ... -> output buffersink
@@ -110,11 +111,11 @@ class FilteredStream(Stream):
 
     @property
     def width(self):
-        return self._stream.width
+        return self._dimensions[0] if self._dimensions else self._stream.width
 
     @property
     def height(self):
-        return self._stream.height
+        return self._dimensions[1] if self._dimensions else self._stream.height
 
     @property
     def duration(self):
