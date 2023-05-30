@@ -26,7 +26,7 @@ class App(wx.App):
             # Try opening a new one
             try:
                 container = Container(filename)
-                stream = container.streams[0]
+                stream = container.streams[0]  # Multiple tracks in a video not supported in app
 
                 stream_profile, profile_errors = Profile.from_stream(stream)
                 if profile_errors:
