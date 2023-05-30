@@ -61,10 +61,10 @@ class FilteredStream(Stream):
         for f in filters:
             # Convert to filter params:
             # param1=value1:param2=value2:...
-            params = ":".join([f"{k}={v}" for k, v in f.params.items()])
+            params = ":".join([f"{k}={v}" for k, v in f.params.items()]) if f.params else None
 
             # Previous filter -> filter
-            filter = graph.add(f.name, params)
+            filter = graph.add(f.name, params) if params else graph.add(f.name)
             previous_filter.link_to(filter)
             previous_filter = filter
 
