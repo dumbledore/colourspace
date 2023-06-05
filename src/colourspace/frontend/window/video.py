@@ -74,7 +74,7 @@ class VideoFrame(wx.Frame):
 
         file_menu = wx.Menu()
         file_menu.Append(wx.ID_OPEN, "", "Open a video or an image file")
-        file_menu.Append(wx.ID_CLOSE, "Close\tCTRL+W", "Close this file")
+        file_close = file_menu.Append(wx.ID_CLOSE, "Close\tCTRL+W", "Close this file")
         menu_bar.Append(file_menu, "&File")
 
         edit_menu = wx.Menu()
@@ -91,7 +91,7 @@ class VideoFrame(wx.Frame):
         self._correction_enabled = colourspace.AppendCheckItem(
             wx.ID_ANY, "Colour Correction\tCTRL+B", "Enable accurate colour representation")
 
-        # On by default
+        # Correction is on by default
         self._correction_enabled.Check()
         colourspace.AppendSeparator()
         input_colourspace = colourspace.Append(
@@ -120,6 +120,18 @@ class VideoFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self._on_output_colourspace, output_colourspace)
         self.Bind(wx.EVT_MENU, self._on_metadata_inspector, self._metadata_menu)
         self.Bind(wx.EVT_MENU, self._on_about, id=wx.ID_ABOUT)
+
+        # Disable stuff if no video present
+        if not self._has_video:
+            items = [
+                file_close,
+            ] + \
+                list(edit_menu.MenuItems) + \
+                list(colourspace.MenuItems) +\
+                list(view_menu.MenuItems)
+
+            for item in items:
+                item.Enable(False)
 
         return menu_bar
 
