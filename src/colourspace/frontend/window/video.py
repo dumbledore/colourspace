@@ -74,31 +74,40 @@ class VideoFrame(wx.Frame):
 
         file_menu = wx.Menu()
         file_menu.Append(wx.ID_OPEN, "", "Open a video or an image file")
-        file_menu.Append(wx.ID_CLOSE, "", "Close this file")
+        file_menu.Append(wx.ID_CLOSE, "Close\tCTRL+W", "Close this file")
         menu_bar.Append(file_menu, "&File")
 
         edit_menu = wx.Menu()
-        seek_time = edit_menu.Append(wx.ID_ANY, "Seek to time", "Seek to a particular time")
-        seek_frame = edit_menu.Append(wx.ID_ANY, "Seek to frame (slow)", "Seek to a particular frame. Can be very slow")
+        seek_time = edit_menu.Append(wx.ID_ANY,
+                                     "Seek to time\tCTRL+T", "Seek to a particular time")
+        seek_frame = edit_menu.Append(wx.ID_ANY,
+                                      "Seek to frame (slow)\tCTRL+F",
+                                      "Seek to a particular frame. Can be very slow")
         edit_menu.AppendSeparator()
         edit_menu.Append(wx.ID_SAVE, "", "Save the current frame")
         menu_bar.Append(edit_menu, "&Edit")
 
         colourspace = wx.Menu()
-        self.correction_enabled = colourspace.AppendCheckItem(
-            wx.ID_ANY, "Colour Correction", "Enable accurate colour representation")
+        self._correction_enabled = colourspace.AppendCheckItem(
+            wx.ID_ANY, "Colour Correction\tCTRL+B", "Enable accurate colour representation")
+
         # On by default
-        self.correction_enabled.Check()
+        self._correction_enabled.Check()
         colourspace.AppendSeparator()
-        input_colourspace = colourspace.Append(wx.ID_ANY, "Input Colourspace", "Select input colourspace")
-        output_colourspace = colourspace.Append(wx.ID_ANY, "Output Colourspace", "Select output colourspace")
-        menu_bar.Append(colourspace, "Colourspace")
+        input_colourspace = colourspace.Append(
+            wx.ID_ANY, "Input Colourspace\tCTRL+[", "Select input colourspace")
+        output_colourspace = colourspace.Append(
+            wx.ID_ANY, "Output Colourspace\tCTRL+]", "Select output colourspace")
+        menu_bar.Append(colourspace, "&Colourspace")
+
+        view_menu = wx.Menu()
+        self._metadata_menu = view_menu.AppendCheckItem(
+            wx.ID_ANY, "Metadata Inspector\tCTRL+I", "Show metadata inspector window")
+        menu_bar.Append(view_menu, "&View")
 
         help_menu = wx.Menu()
         help_menu.Append(wx.ID_ABOUT, "", "About this application")
         menu_bar.Append(help_menu, "&Help")
-
-        # TODO: Add platform-specific names/shortcuts
 
         # Bind the events
         self.Bind(wx.EVT_MENU, self._on_open_file, id=wx.ID_OPEN)
@@ -106,9 +115,10 @@ class VideoFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self._on_seek_time, seek_time)
         self.Bind(wx.EVT_MENU, self._on_seek_frame, seek_frame)
         self.Bind(wx.EVT_MENU, self._on_save_frame, id=wx.ID_SAVE)
-        self.Bind(wx.EVT_MENU, self._on_corretion_toggled, self.correction_enabled)
+        self.Bind(wx.EVT_MENU, self._on_corretion_toggled, self._correction_enabled)
         self.Bind(wx.EVT_MENU, self._on_input_colourspace, input_colourspace)
         self.Bind(wx.EVT_MENU, self._on_output_colourspace, output_colourspace)
+        self.Bind(wx.EVT_MENU, self._on_metadata_inspector, self._metadata_menu)
         self.Bind(wx.EVT_MENU, self._on_about, id=wx.ID_ABOUT)
 
         return menu_bar
@@ -132,13 +142,17 @@ class VideoFrame(wx.Frame):
 
     # Colourspace
     def _on_corretion_toggled(self, event):
-        print(f"correction: {self.correction_enabled.IsChecked()}")
+        print(f"correction: {self._correction_enabled.IsChecked()}")
 
     def _on_input_colourspace(self, event):
         print("input colourspace")
 
     def _on_output_colourspace(self, event):
         print("output colourspace")
+
+    # View
+    def _on_metadata_inspector(self, event):
+        print(f"metadata: {self._metadata_menu.IsChecked()}")
 
     # Help
     def _on_about(self, event):
