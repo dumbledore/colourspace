@@ -26,7 +26,11 @@ class VideoFrame(wx.Frame):
             self._video = VideoPanel(self, video, resize_quality, initial_min_max_size)
         else:
             self._has_video = False
-            size = self.FromDIP((640, 480))
+            display_width, display_height = wx.DisplaySize()
+            display_ratio = display_height / display_width
+            _, initial_width = initial_min_max_size
+            initial_height = int(initial_width * display_ratio)
+            size = self.FromDIP((initial_width, initial_height))
             self._video = wx.Panel(self, size=size)
 
         # Initialise the menu
