@@ -18,20 +18,23 @@ class VideoFrame(wx.Frame):
         title = video.container.filename if video else "Untitled"
         super().__init__(None, title=title, *args, **kwargs)
 
+        # Calculate appropriate initial size for the video window
+        display_width, display_height = wx.DisplaySize()
+        display_ratio = display_height / display_width
+        _, initial_width = initial_min_max_size
+        initial_height = int(initial_width * display_ratio)
+        size = self.FromDIP((initial_width, initial_height))
+        self.SetSize(size)
+
         self._app = app
         self._statusbar = self.CreateStatusBar(2)
 
         if video:
             self._has_video = True
-            self._video = VideoPanel(self, video, resize_quality, initial_min_max_size)
+            self._video = VideoPanel(self, video, resize_quality)
         else:
             self._has_video = False
-            display_width, display_height = wx.DisplaySize()
-            display_ratio = display_height / display_width
-            _, initial_width = initial_min_max_size
-            initial_height = int(initial_width * display_ratio)
-            size = self.FromDIP((initial_width, initial_height))
-            self._video = wx.Panel(self, size=size)
+            self._video = wx.Panel(self)
 
         # Initialise the menu
         self.SetMenuBar(self._create_menu())

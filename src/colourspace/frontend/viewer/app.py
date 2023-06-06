@@ -63,7 +63,7 @@ class App(wx.App):
             del self._opened[None]
 
         display_width, _ = wx.DisplaySize()
-        min_max_size = display_width / 4, display_width / 2
+        min_max_size = display_width // 4, display_width // 2
         frame = VideoFrame(self, stream, initial_min_max_size=min_max_size)
         frame.Center()
         frame.Show()

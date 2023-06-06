@@ -18,7 +18,6 @@ class VideoPanel(wx.Panel):
     def __init__(self, parent,
                  video,
                  resize_quality=Image.LINEAR,
-                 initial_min_max_size=(320, 640),
                  *args, **kwargs):
 
         super().__init__(parent, *args, **kwargs)
@@ -26,24 +25,9 @@ class VideoPanel(wx.Panel):
         self._video = video
         self._resize_quality = resize_quality
 
-        # calculate appropriate initial size for the video panel
-        video_size = (video.width, video.height)
-        initial_min, initial_max = initial_min_max_size
-
-        if max(video_size) > initial_max:
-            divisor = max(video_size) // initial_max
-            video_size = [s // divisor for s in video_size]
-        elif max(video_size) < initial_min:
-            multiplier = initial_min // max(video_size)
-            print(multiplier)
-            video_size = [s * multiplier for s in video_size]
-
-        video_size = self.FromDIP(video_size)
-
         self._frame = video.frame.to_image()
 
-        self._panel = wx.Panel(self, size=video_size,
-                               style=wx.FULL_REPAINT_ON_RESIZE)
+        self._panel = wx.Panel(self, style=wx.FULL_REPAINT_ON_RESIZE)
         self._panel.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         self._panel.Bind(wx.EVT_PAINT, self._on_paint)
 
