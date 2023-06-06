@@ -182,7 +182,7 @@ Colourspace is a Python library and viewer tool used to render videos and images
 
 It uses the av package to access FFmpeg functionality, and pymediainfo to obtain file and stream metadata, that is not yet available through av (even though it is available in FFmpeg).
 
-Note: PyAV uses a (rather) outdated version of FFmpeg: 5.1.2, which may lack support for some newer stuff. Check the FFmpeg build script for PyAV.
+Note: PyAV uses a (rather) outdated version of FFmpeg: 5.1.2, which may lack bug fixes and support for newer functionality.
 
 Licensed under BSD 3-Clause.
 
