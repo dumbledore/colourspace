@@ -42,7 +42,7 @@ class VideoFrame(wx.Frame):
         # Set current video position in the status bar to 00:00:00
         self._update_video_position(0)
 
-        self.Fit()
+        self.Layout()
 
         self.Bind(wx.EVT_CLOSE, self._on_close)
         self.Bind(wx.EVT_SIZE, self._on_size)
