@@ -1,5 +1,6 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
+import sys
 import wx
 
 from colourspace.frontend.control.video import VideoPanel, EVT_VIDEO_SEEK
@@ -121,6 +122,11 @@ class VideoFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self._on_metadata_inspector, self._metadata_menu)
         self.Bind(wx.EVT_MENU, self._on_about, id=wx.ID_ABOUT)
 
+        # Add Exit to File menu on non-MacOS
+        if sys.platform != "darwin":
+            file_menu.Append(wx.ID_EXIT)
+            self.Bind(wx.EVT_MENU, self._on_quit, id=wx.ID_EXIT)
+
         # Disable stuff if no video present
         if not self._has_video:
             items = [
@@ -141,6 +147,9 @@ class VideoFrame(wx.Frame):
 
     def _on_close_file(self, event):
         print("close")
+
+    def _on_quit(self, event):
+        print("quit")
 
     # Edit
     def _on_seek_time(self, event):
