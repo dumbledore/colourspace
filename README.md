@@ -1,13 +1,13 @@
 # Colourspace
 _Colourspace_ is a Python library and viewer tool used to render videos and
-images in the proper colourspace using the colorspace _FFmpeg_ filter.
+images in the proper colourspace using the _colorspace_ _FFmpeg_ filter.
 
-It uses the _av_ package to access FFmpeg functionality, and _pymediainfo_
+It uses the _av_ package to access _FFmpeg_ functionality, and _pymediainfo_
 to obtain file and stream metadata, that is not yet available through _av_
-(even though it _is_ available in FFmpeg).
+(even though it _is_ available in _FFmpeg_).
 
-Note: _PyAV_ uses a (rather) outdated version of FFmpeg: 5.1.2, which may lack
-support for some newer stuff. Check the [FFmpeg build script][1] for PyAV.
+Note: _PyAV_ uses a (rather) outdated version of FFmpeg: 5.1.2, which may lack bug fixes
+and support for newer functionality. Check the [FFmpeg build script][1] for PyAV.
 
 ## License
 Licensed under BSD 3-Clause.
