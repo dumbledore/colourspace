@@ -86,6 +86,9 @@ class App(wx.App):
         for window in opened:
             window.Close()
 
+        # This will close left-over windows (if any)
+        self.ExitMainLoop()
+
 
 def main():
     app = App()
