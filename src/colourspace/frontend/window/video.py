@@ -74,35 +74,35 @@ class VideoFrame(wx.Frame):
 
         file_menu = wx.Menu()
         file_menu.Append(wx.ID_OPEN, "", "Open a video or an image file")
-        file_close = file_menu.Append(wx.ID_CLOSE, "Close\tCTRL+W", "Close this file")
+        file_close = file_menu.Append(wx.ID_CLOSE, "Close\tCtrl+W", "Close this file")
         menu_bar.Append(file_menu, "&File")
 
         edit_menu = wx.Menu()
         seek_time = edit_menu.Append(wx.ID_ANY,
-                                     "Seek to time\tCTRL+T", "Seek to a particular time")
+                                     "Seek to time\tCtrl+T", "Seek to a particular time")
         seek_frame = edit_menu.Append(wx.ID_ANY,
-                                      "Seek to frame (slow)\tCTRL+F",
+                                      "Seek to frame (slow)\tCtrl+F",
                                       "Seek to a particular frame. Can be very slow")
         edit_menu.AppendSeparator()
-        edit_menu.Append(wx.ID_SAVE, "", "Save the current frame")
+        edit_menu.Append(wx.ID_SAVE, "Save frame\tCtrl+S", "Save the current frame")
         menu_bar.Append(edit_menu, "&Edit")
 
         colourspace = wx.Menu()
         self._correction_enabled = colourspace.AppendCheckItem(
-            wx.ID_ANY, "Colour Correction\tCTRL+B", "Enable accurate colour representation")
+            wx.ID_ANY, "Colour Correction\tCtrl+B", "Enable accurate colour representation")
 
         # Correction is on by default
         self._correction_enabled.Check()
         colourspace.AppendSeparator()
         input_colourspace = colourspace.Append(
-            wx.ID_ANY, "Input Colourspace\tCTRL+[", "Select input colourspace")
+            wx.ID_ANY, "Input Colourspace\tCtrl+[", "Select input colourspace")
         output_colourspace = colourspace.Append(
-            wx.ID_ANY, "Output Colourspace\tCTRL+]", "Select output colourspace")
+            wx.ID_ANY, "Output Colourspace\tCtrl+]", "Select output colourspace")
         menu_bar.Append(colourspace, "&Colourspace")
 
         view_menu = wx.Menu()
         self._metadata_menu = view_menu.AppendCheckItem(
-            wx.ID_ANY, "Metadata Inspector\tCTRL+I", "Show metadata inspector window")
+            wx.ID_ANY, "Metadata Inspector\tCtrl+I", "Show metadata inspector window")
         menu_bar.Append(view_menu, "&View")
 
         help_menu = wx.Menu()
