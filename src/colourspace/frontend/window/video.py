@@ -149,7 +149,7 @@ class VideoFrame(wx.Frame):
         print("close")
 
     def _on_quit(self, event):
-        print("quit")
+        self._app.Quit()
 
     # Edit
     def _on_seek_time(self, event):

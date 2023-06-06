@@ -75,6 +75,15 @@ class App(wx.App):
     def OnCloseWindow(self, filename):
         del self._opened[filename]
 
+    def Quit(self):
+        # Cache the opened windows as
+        # self._opened is going to be modified
+        # by each closed window
+        opened = list(self._opened.values())
+
+        for window in opened:
+            window.Close()
+
 
 def main():
     app = App()
