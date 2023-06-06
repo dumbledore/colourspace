@@ -129,9 +129,7 @@ class VideoFrame(wx.Frame):
 
         # Disable stuff if no video present
         if not self._has_video:
-            items = [
-                file_close,
-            ] + \
+            items = \
                 list(edit_menu.MenuItems) + \
                 list(colourspace.MenuItems) +\
                 list(view_menu.MenuItems)
@@ -146,7 +144,7 @@ class VideoFrame(wx.Frame):
         print("open")
 
     def _on_close_file(self, event):
-        print("close")
+        self.Close()
 
     def _on_quit(self, event):
         self._app.Quit()
