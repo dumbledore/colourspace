@@ -88,12 +88,7 @@ class VideoFrame(wx.Frame):
         menu_bar.Append(file_menu, "&File")
 
         edit_menu = wx.Menu()
-        seek_time = edit_menu.Append(wx.ID_ANY,
-                                     "Seek to time\tCtrl+T", "Seek to a particular time")
-        seek_frame = edit_menu.Append(wx.ID_ANY,
-                                      "Seek to frame (slow)\tCtrl+F",
-                                      "Seek to a particular frame. Can be very slow")
-        edit_menu.AppendSeparator()
+        seek_time = edit_menu.Append(wx.ID_ANY, "Seek\tCtrl+F", "Seek to a particular time")
         edit_menu.Append(wx.ID_SAVE, "Save frame\tCtrl+S", "Save the current frame")
         menu_bar.Append(edit_menu, "&Edit")
 
@@ -123,7 +118,6 @@ class VideoFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self._on_open_file, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, self._on_close_file, id=wx.ID_CLOSE)
         self.Bind(wx.EVT_MENU, self._on_seek_time, seek_time)
-        self.Bind(wx.EVT_MENU, self._on_seek_frame, seek_frame)
         self.Bind(wx.EVT_MENU, self._on_save_frame, id=wx.ID_SAVE)
         self.Bind(wx.EVT_MENU, self._on_corretion_toggled, self._correction_enabled)
         self.Bind(wx.EVT_MENU, self._on_input_colourspace, input_colourspace)
@@ -172,9 +166,6 @@ Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
     # Edit
     def _on_seek_time(self, event):
         print("seek time")
-
-    def _on_seek_frame(self, event):
-        print("seek frame")
 
     def _on_save_frame(self, event):
         print("save")
