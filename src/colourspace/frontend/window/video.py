@@ -89,7 +89,9 @@ class VideoFrame(wx.Frame):
 
         edit_menu = wx.Menu()
         seek_time = edit_menu.Append(wx.ID_ANY, "Seek\tCtrl+F", "Seek to a particular time")
-        edit_menu.Append(wx.ID_SAVE, "Save frame\tCtrl+S", "Save the current frame")
+        edit_menu.AppendSeparator()
+        edit_menu.Append(wx.ID_SAVE, "Save frame\tCtrl+S", "Save the current frame along with video")
+        edit_menu.Append(wx.ID_SAVEAS, "Save frame to location", "Save the current frame to a specified location")
         menu_bar.Append(edit_menu, "&Edit")
 
         colourspace = wx.Menu()
@@ -119,6 +121,7 @@ class VideoFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self._on_close_file, id=wx.ID_CLOSE)
         self.Bind(wx.EVT_MENU, self._on_seek_time, seek_time)
         self.Bind(wx.EVT_MENU, self._on_save_frame, id=wx.ID_SAVE)
+        self.Bind(wx.EVT_MENU, self._on_save_frame_as, id=wx.ID_SAVEAS)
         self.Bind(wx.EVT_MENU, self._on_corretion_toggled, self._correction_enabled)
         self.Bind(wx.EVT_MENU, self._on_input_colourspace, input_colourspace)
         self.Bind(wx.EVT_MENU, self._on_output_colourspace, output_colourspace)
@@ -169,6 +172,9 @@ Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
 
     def _on_save_frame(self, event):
         print("save")
+
+    def _on_save_frame_as(self, event):
+        print("save as")
 
     # Colourspace
     def _on_corretion_toggled(self, event):
