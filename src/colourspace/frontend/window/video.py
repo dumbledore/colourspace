@@ -5,6 +5,7 @@ import wx
 
 from colourspace.frontend.control.video import VideoPanel, EVT_VIDEO_SEEK
 from colourspace.frontend.util.drop import Drop
+from colourspace.frontend.window.metadata import MetadataFrame
 from colourspace.util.time import time_format
 from PIL import Image
 
@@ -28,6 +29,7 @@ class VideoFrame(wx.Frame):
 
         self._app = app
         self._statusbar = self.CreateStatusBar(2)
+        self._metadata = None
 
         if video:
             self._has_video = True
@@ -189,7 +191,16 @@ Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
 
     # View
     def _on_metadata_inspector(self, event):
-        print(f"metadata: {self._metadata_menu.IsChecked()}")
+        if not self._metadata:
+            self._metadata = MetadataFrame(self._video.video, self)
+
+            def on_metadata_close(event):
+                self._metadata_menu.Check(False)
+                event.Skip()
+
+            self._metadata.Bind(wx.EVT_CLOSE, on_metadata_close)
+
+        self._metadata.Show(self._metadata_menu.IsChecked())
 
     # Help
     def _on_about(self, event):
