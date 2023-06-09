@@ -1,5 +1,6 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
+import logging
 import os
 import sys
 import wx
@@ -91,6 +92,10 @@ class App(wx.App):
 
 
 def main():
+    # WARNING/libav.swscaler           (66753 ): deprecated pixel format used, make sure you did set range correctly
+    format = "%(levelname)-7s/%(name)-24s (%(process)-6d): %(message)s"
+    logging.basicConfig(format=format)
+
     app = App()
 
     if sys.argv[1:]:

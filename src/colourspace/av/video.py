@@ -5,6 +5,7 @@ import sys
 from av.error import FFmpegError
 from colourspace.av.exception import AVException
 from colourspace.av.stream import Stream
+from logging import getLogger
 
 
 class VideoStream(Stream):
@@ -27,7 +28,7 @@ class VideoStream(Stream):
                 self._key_frames = [float(p.pts * p.time_base)
                                     for p in stream.container.demux(stream) if p.is_keyframe]
             except FFmpegError:
-                print("Could not obtain keyframes", file=sys.stderr)
+                getLogger(__name__).warning("Could not obtain keyframes")
 
             # rewind container
             container.seek(0)
@@ -78,7 +79,7 @@ class VideoStream(Stream):
                 if isinstance(ex, EOFError):
                     raise ex
 
-                print(ex, file=sys.stderr)
+                getLogger(__name__).warning("FFmpeg error while decoding", exc_info=ex)
                 self._has_errors = True
 
         # This may be reached if a frame was successfully decoded,
