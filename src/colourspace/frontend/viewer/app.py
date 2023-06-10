@@ -35,16 +35,15 @@ class App(wx.App):
                     print(profile_errors)
                 print(f"Selected input profile: {stream_profile}")
 
-                # Create ColourSpace filter
-                filters = [ColourspaceFilter(stream_profile, PROFILES["bt709"])]
-
                 # Get rotation from stream side data
                 rotation = float(stream.info.get("rotation", 0))
 
                 # Inject extra filters to handle autorotation.
                 # Dimensions may need to change if rotated at 90/270
-                new_filters, dimensions = rotate_filters(rotation, (stream.width, stream.height))
-                filters += new_filters
+                filters, dimensions = rotate_filters(rotation, (stream.width, stream.height))
+
+                # Create ColourSpace filter
+                filters += [ColourspaceFilter(stream_profile, PROFILES["bt709"])]
 
                 # Are there any filters in place (rotation / colourspace)?
                 if filters:
