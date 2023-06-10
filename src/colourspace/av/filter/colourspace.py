@@ -200,12 +200,14 @@ class Profile:
         # Otherwise return the highest ranking profile.
         profile = PROFILES["bt709"] if not max_score else scored_profiles[max_score]
         if not max_score:
+            problems["profile"] = "Falling back to BT.709"
             return profile, problems
 
         # Make a copy of the profile to fill in the range
         profile = copy.copy(profile)
         profile.range = range
 
+        problems["profile"] = "Using closest match"
         return profile, problems
 
 

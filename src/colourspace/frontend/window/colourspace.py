@@ -14,35 +14,51 @@ class ColourspaceDialog(wx.Dialog):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        def add_choice(name, choices, handler, error_key=None):
+        def add_choice(name, choices, handler, parent, sizer, error_key=None):
             # label
-            label = wx.StaticText(self, label=name)
+            label = wx.StaticText(parent, label=name)
             sizer.Add(label, 0, wx.ALL, 5)
 
             # choices
             sizer_ = wx.BoxSizer(wx.HORIZONTAL)
 
-            choices = wx.Choice(self, choices=choices)
+            choices = wx.Choice(parent, choices=choices)
             choices.SetSelection(0)
             choices.Bind(wx.EVT_CHOICE, handler)
             sizer_.Add(choices, 1, wx.ALL | wx.EXPAND, 5)
 
             if error_key and (error_key in self._profile_errors):
-                profile_warning = wx.StaticText(self, label="\u26A0")
+                profile_warning = wx.StaticText(parent, label="\u26A0")
                 profile_warning.SetBackgroundColour((255, 255, 0))
                 profile_warning.SetForegroundColour((0, 0, 0))
                 profile_warning.SetToolTip(self._profile_errors[error_key])
                 sizer_.Add(profile_warning, 0, wx.ALL, 5)
 
-            sizer.Add(sizer_, 1, wx.EXPAND, 5)
+            sizer.Add(sizer_, 0, wx.EXPAND, 5)
 
             return choices
 
-        self._profiles = add_choice("Profile", ["Custom"] + list(PROFILES.keys()), self._on_profile)
-        self._colourspaces = add_choice("Colour Space", COLOURSPACES, self._on_colourspace, "colourspace")
-        self._primaries = add_choice("Primaries", PRIMARIES, self._on_primaries, "primaries")
-        self._transfers = add_choice("Transfer", TRANSFERS, self._on_transfer, "transfer")
-        self._ranges = add_choice("Range", ["Ignore"] + RANGES, self._on_range, "range")
+        self._profiles = add_choice("Profile", ["Custom"] + list(PROFILES.keys()),
+                                    self._on_profile, self, sizer, "profile")
+
+        advanced = wx.CollapsiblePane(self, wx.ID_ANY, "Advanced", wx.DefaultPosition,
+                                      wx.DefaultSize, wx.CP_DEFAULT_STYLE)
+        advanced.Collapse(self._profile.name != "Custom")
+        sizer_advanced = wx.BoxSizer(wx.VERTICAL)
+
+        self._colourspaces = add_choice("Colour Space", COLOURSPACES,
+                                        self._on_colourspace, advanced.GetPane(), sizer_advanced, "colourspace")
+        self._primaries = add_choice("Primaries", PRIMARIES, self._on_primaries,
+                                     advanced.GetPane(), sizer_advanced, "primaries")
+        self._transfers = add_choice("Transfer", TRANSFERS, self._on_transfer,
+                                     advanced.GetPane(), sizer_advanced, "transfer")
+        self._ranges = add_choice("Range", ["Ignore"] + RANGES, self._on_range,
+                                  advanced.GetPane(), sizer_advanced, "range")
+
+        advanced.GetPane().SetSizer(sizer_advanced)
+        advanced.GetPane().Layout()
+        sizer_advanced.Fit(advanced.GetPane())
+        sizer.Add(advanced, 1, wx.EXPAND | wx.ALL, 5)
 
         # buttons
         button_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -57,7 +73,7 @@ class ColourspaceDialog(wx.Dialog):
         button_reset = wx.Button(self, wx.ID_DEFAULT, "Default")
         button_sizer.Add(button_reset, 0, wx.ALL, 5)
 
-        sizer.Add(button_sizer, 1, wx.EXPAND, 5)
+        sizer.Add(button_sizer, 0, wx.EXPAND, 5)
 
         self._update_from_profile()
 
