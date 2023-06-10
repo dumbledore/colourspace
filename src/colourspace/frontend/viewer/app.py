@@ -12,8 +12,10 @@ from colourspace.av.filter.rotate import rotate_filters
 from colourspace.frontend.window.video import VideoFrame
 from colourspace.util.settings import Settings
 from pathlib import Path
+from pylru import lrucache
 
 SETTINGS_FILENAME = str(Path.home().joinpath(".clrview.cfg"))
+MAX_REMEMBERED_VIDEOS = 1000
 
 
 class App(wx.App):
@@ -31,13 +33,30 @@ class App(wx.App):
 
             # Try opening a new one
             try:
+                logger = logging.getLogger(__name__)
                 container = Container(filename)
                 stream = container.streams[0]  # Multiple tracks in a video not supported in app
 
-                stream_profile, profile_errors = Profile.from_stream(stream)
-                if profile_errors:
-                    print(profile_errors)
-                print(f"Selected input profile: {stream_profile}")
+                # Read profile from settings
+                videos = self._settings.get("videos", lrucache(MAX_REMEMBERED_VIDEOS))
+
+                if filename not in videos:
+                    # assign a most appropriate profile
+                    profile, profile_errors = Profile.from_stream(stream)
+
+                    if profile_errors:
+                        logger.warning(f"Errors while getting profile: {profile_errors}")
+
+                    # Update video settings cache
+                    videos[filename] = {"profile": profile}
+
+                    # Update Settings file
+                    self._settings.set("videos", videos)
+                else:
+                    # Get profile directly from cache
+                    profile = videos[filename]["profile"]
+
+                logger.info(f"Selected input profile: {profile}")
 
                 # Get rotation from stream side data
                 rotation = float(stream.info.get("rotation", 0))
@@ -47,7 +66,7 @@ class App(wx.App):
                 filters, dimensions = rotate_filters(rotation, (stream.width, stream.height))
 
                 # Create ColourSpace filter
-                filters += [ColourspaceFilter(stream_profile, PROFILES["bt709"])]
+                filters += [ColourspaceFilter(profile, PROFILES["bt709"])]
 
                 # Are there any filters in place (rotation / colourspace)?
                 if filters:

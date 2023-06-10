@@ -1,7 +1,9 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
 import builtins
+import colourspace.av.filter.colourspace
 import pickle
+import pylru
 
 from logging import getLogger
 
@@ -21,6 +23,10 @@ class RestrictedUnpickler(pickle.Unpickler):
         # Only allow safe classes from builtins.
         if module == "builtins" and name in safe_builtins:
             return getattr(builtins, name)
+        elif (module == "pylru"):
+            return getattr(pylru, name)
+        elif (module == "colourspace.av.filter.colourspace"):
+            return getattr(colourspace.av.filter.colourspace, name)
 
         # Forbid everything else.
         raise pickle.UnpicklingError("global '%s.%s' is forbidden" % (module, name))
