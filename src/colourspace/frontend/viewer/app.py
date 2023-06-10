@@ -10,6 +10,10 @@ from colourspace.av.filter import FilteredStream
 from colourspace.av.filter.colourspace import ColourspaceFilter, Profile, PROFILES
 from colourspace.av.filter.rotate import rotate_filters
 from colourspace.frontend.window.video import VideoFrame
+from colourspace.util.settings import Settings
+from pathlib import Path
+
+SETTINGS_FILENAME = str(Path.home().joinpath(".clrview.cfg"))
 
 
 class App(wx.App):
@@ -72,7 +76,12 @@ class App(wx.App):
 
     def OnInit(self):
         self._opened = {}
+        self._settings = Settings(SETTINGS_FILENAME)
         return True
+
+    @property
+    def Settings(self):
+        return self._settings
 
     def OnCloseWindow(self, filename):
         del self._opened[filename]
