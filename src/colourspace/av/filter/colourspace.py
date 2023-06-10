@@ -151,7 +151,7 @@ class Profile:
             name for name, profile in PROFILES.items() if profile == self
         ]
 
-        return names[0] if names else "Unknown"
+        return names[0] if names else "Custom"
 
     def __repr__(self):
         return f"{self.name}: {{ csp={self.colourspace}, prm={self.primaries}, trc={self.transfer}, rng={self.range} }}"

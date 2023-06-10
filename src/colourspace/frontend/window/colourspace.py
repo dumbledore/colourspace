@@ -1,7 +1,7 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
 import wx
-from colourspace.av.filter.colourspace import PROFILES, COLOURSPACES, PRIMARIES, TRANSFERS, RANGES
+from colourspace.av.filter.colourspace import PROFILES, COLOURSPACES, PRIMARIES, TRANSFERS, RANGES, Profile
 
 
 class ColourspaceDialog(wx.Dialog):
@@ -9,9 +9,12 @@ class ColourspaceDialog(wx.Dialog):
         super().__init__(*args, **kw)
 
         self._video = video
+        self._profile = video.input_profile
+        self._default_profile, self._profile_errors = Profile.from_stream(video)
+
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        def add_choice(name, choices):
+        def add_choice(name, choices, error_key=None):
             # label
             label = wx.StaticText(self, label=name)
             sizer.Add(label, 0, wx.ALL, 5)
@@ -23,19 +26,20 @@ class ColourspaceDialog(wx.Dialog):
             choices.SetSelection(0)
             sizer_.Add(choices, 1, wx.ALL | wx.EXPAND, 5)
 
-            if name == "Primaries":
+            if error_key and (error_key in self._profile_errors):
                 profile_warning = wx.StaticText(self, label="\u26A0")
                 profile_warning.SetBackgroundColour((255, 255, 0))
                 profile_warning.SetForegroundColour((0, 0, 0))
+                profile_warning.SetToolTip(self._profile_errors[error_key])
                 sizer_.Add(profile_warning, 0, wx.ALL, 5)
 
             sizer.Add(sizer_, 1, wx.EXPAND, 5)
 
-        add_choice("Profile", list(PROFILES.keys()))
-        add_choice("Colour Space", COLOURSPACES)
-        add_choice("Primaries", PRIMARIES)
-        add_choice("Transfer", TRANSFERS)
-        add_choice("Range", ["Ignore"] + RANGES)
+        add_choice("Profile", ["Custom"] + list(PROFILES.keys()))
+        add_choice("Colour Space", COLOURSPACES, "colourspace")
+        add_choice("Primaries", PRIMARIES, "primaries")
+        add_choice("Transfer", TRANSFERS, "transfer")
+        add_choice("Range", ["Ignore"] + RANGES, "range")
 
         # buttons
         button_sizer = wx.BoxSizer(wx.HORIZONTAL)
