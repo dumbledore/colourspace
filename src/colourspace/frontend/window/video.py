@@ -5,6 +5,7 @@ import wx
 
 from colourspace.frontend.control.video import VideoPanel, EVT_VIDEO_SEEK
 from colourspace.frontend.util.drop import Drop
+from colourspace.frontend.window.colourspace import ColourspaceDialog
 from colourspace.frontend.window.metadata import MetadataFrame
 from colourspace.util.time import time_format
 from PIL import Image
@@ -183,7 +184,12 @@ Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
         self._video.Refresh()
 
     def _on_input_colourspace(self, event):
-        print("input colourspace")
+        dialog = ColourspaceDialog(self._video.video, self)
+        try:
+            if dialog.ShowModal() == wx.ID_OK:
+                print("applying colourspace")
+        finally:
+            dialog.Destroy()
 
     def _on_output_colourspace(self, event):
         print("output colourspace")

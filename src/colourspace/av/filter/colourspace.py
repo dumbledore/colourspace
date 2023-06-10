@@ -105,10 +105,10 @@ INFO_TO_TRANSFER = {
     # "HLG": not supported by vf_colorspace
 }
 
-RANGES = (
+RANGES = [
     "tv",  # tv/mpeg = limited
     "pc",  # pc/jpeg = full
-)
+]
 
 INFO_TO_RANGES = {
     "Limited": "tv",
