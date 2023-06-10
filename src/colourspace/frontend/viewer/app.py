@@ -39,20 +39,7 @@ class App(wx.App):
                 stream = container.streams[0]  # Multiple tracks in a video not supported in app
 
                 # Read profile from settings
-                videos = self._settings.get("videos", lrucache(MAX_REMEMBERED_VIDEOS))
-
-                if filename not in videos:
-                    # assign a most appropriate profile
-                    profile, _ = Profile.from_stream(stream)
-
-                    # Update video settings cache
-                    videos[filename] = {"profile": profile}
-
-                    # Update Settings file
-                    self._settings.set("videos", videos)
-                else:
-                    # Get profile directly from cache
-                    profile = videos[filename]["profile"]
+                profile = self.GetProfileFromSettings(stream)
 
                 # Apply automatic corrections
                 stream = CorrectedStream(stream, profile, PROFILES["bt709"])
@@ -87,6 +74,37 @@ class App(wx.App):
     @property
     def Settings(self):
         return self._settings
+
+    def GetProfileFromSettings(self, video):
+        # Read video settings from file
+        videos = self._settings.get("videos", lrucache(MAX_REMEMBERED_VIDEOS))
+
+        filename = video.container.filename
+
+        if filename not in videos:
+            # Assign a most appropriate profile
+            profile, _ = Profile.from_stream(video)
+
+            # Update video settings cache
+            videos[filename] = profile
+
+            # Update Settings file
+            self._settings.set("videos", videos)
+        else:
+            # Get profile directly from cache
+            profile = videos[filename]
+
+        return profile
+
+    def UpdateProfileInSettings(self, video, profile):
+        # Read video settings from file
+        videos = self._settings.get("videos", lrucache(MAX_REMEMBERED_VIDEOS))
+
+        # Update video settings cache
+        videos[video.container.filename] = profile
+
+        # Update settings file
+        self._settings.set("videos", videos)
 
     def OnCloseWindow(self, filename):
         del self._opened[filename]

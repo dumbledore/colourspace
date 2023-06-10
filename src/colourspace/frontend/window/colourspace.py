@@ -71,6 +71,7 @@ class ColourspaceDialog(wx.Dialog):
         button_sizer.Add(button_cancel, 0, wx.ALL, 5)
 
         button_reset = wx.Button(self, wx.ID_DEFAULT, "Default")
+        button_reset.Bind(wx.EVT_BUTTON, self._on_reset)
         button_sizer.Add(button_reset, 0, wx.ALL, 5)
 
         sizer.Add(button_sizer, 0, wx.EXPAND, 5)
@@ -136,3 +137,11 @@ class ColourspaceDialog(wx.Dialog):
 
         self._profile = Profile(self._profile.colourspace, self._profile.primaries, self._profile.transfer, range)
         self._update_from_profile()
+
+    def _on_reset(self, event):
+        self._profile, _ = Profile.from_stream(self._video)
+        self._update_from_profile()
+
+    @property
+    def Profile(self):
+        return self._profile

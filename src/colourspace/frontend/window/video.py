@@ -187,7 +187,10 @@ Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
         dialog = ColourspaceDialog(self._video.video, self)
         try:
             if dialog.ShowModal() == wx.ID_OK:
-                print("applying colourspace")
+                self._video.video.input_profile = dialog.Profile
+                self._app.UpdateProfileInSettings(self._video.video, dialog.Profile)
+                self._video.refresh_frame()
+                self._video.Refresh()
         finally:
             dialog.Destroy()
 
