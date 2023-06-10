@@ -1,16 +1,24 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
+import os
 import wx
+
 from colourspace.av.filter.colourspace import PROFILES, COLOURSPACES, PRIMARIES, TRANSFERS, RANGES, Profile
 
 
 class ColourspaceDialog(wx.Dialog):
-    def __init__(self, video, *args, **kw):
+    def __init__(self, video, input, *args, **kw):
         super().__init__(*args, **kw)
 
-        self._video = video
-        self._profile = video.input_profile
-        self._default_profile, self._profile_errors = Profile.from_stream(video)
+        if input:
+            self._profile = video.input_profile
+            self._default_profile, self._profile_errors = Profile.from_stream(video)
+            self.SetTitle(f"Input profile ({os.path.basename(video.container.filename)})")
+        else:
+            self._profile = video.output_profile
+            self._default_profile = PROFILES["bt709"]
+            self._profile_errors = {}
+            self.SetTitle("Output profile")
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
@@ -65,6 +73,7 @@ class ColourspaceDialog(wx.Dialog):
 
         button_ok = wx.Button(self, wx.ID_OK)
         button_ok.SetDefault()
+        button_ok.SetFocus()
         button_sizer.Add(button_ok, 0, wx.ALL, 5)
 
         button_cancel = wx.Button(self, wx.ID_CANCEL)
@@ -139,7 +148,7 @@ class ColourspaceDialog(wx.Dialog):
         self._update_from_profile()
 
     def _on_reset(self, event):
-        self._profile, _ = Profile.from_stream(self._video)
+        self._profile = self._default_profile
         self._update_from_profile()
 
     @property

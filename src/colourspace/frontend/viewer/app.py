@@ -39,10 +39,11 @@ class App(wx.App):
                 stream = container.streams[0]  # Multiple tracks in a video not supported in app
 
                 # Read profile from settings
-                profile = self.GetProfileFromSettings(stream)
+                input_profile = self.GetVideoProfileFromSettings(stream)
+                output_profile = self.GetOutputProfileFromSettings()
 
                 # Apply automatic corrections
-                stream = CorrectedStream(stream, profile, PROFILES["bt709"])
+                stream = CorrectedStream(stream, input_profile, output_profile)
             except Exception as e:
                 logger.warning(f"Failed to open '{os.path.basename(filename)}'", exc_info=e)
                 wx.MessageDialog(None, f"Failed to open '{os.path.basename(filename)}': {e}",
@@ -75,7 +76,7 @@ class App(wx.App):
     def Settings(self):
         return self._settings
 
-    def GetProfileFromSettings(self, video):
+    def GetVideoProfileFromSettings(self, video):
         # Read video settings from file
         videos = self._settings.get("videos", lrucache(MAX_REMEMBERED_VIDEOS))
 
@@ -96,7 +97,7 @@ class App(wx.App):
 
         return profile
 
-    def UpdateProfileInSettings(self, video, profile):
+    def UpdateVideoProfileInSettings(self, video, profile):
         # Read video settings from file
         videos = self._settings.get("videos", lrucache(MAX_REMEMBERED_VIDEOS))
 
@@ -105,6 +106,12 @@ class App(wx.App):
 
         # Update settings file
         self._settings.set("videos", videos)
+
+    def GetOutputProfileFromSettings(self):
+        return self._settings.get("profile", PROFILES["bt709"])
+
+    def UpdateOutputProfileInSettings(self, profile):
+        self._settings.set("profile", profile)
 
     def OnCloseWindow(self, filename):
         del self._opened[filename]

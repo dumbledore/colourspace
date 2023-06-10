@@ -184,18 +184,26 @@ Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
         self._video.Refresh()
 
     def _on_input_colourspace(self, event):
-        dialog = ColourspaceDialog(self._video.video, self)
+        dialog = ColourspaceDialog(self._video.video, True, self)
         try:
             if dialog.ShowModal() == wx.ID_OK:
                 self._video.video.input_profile = dialog.Profile
-                self._app.UpdateProfileInSettings(self._video.video, dialog.Profile)
+                self._app.UpdateVideoProfileInSettings(self._video.video, dialog.Profile)
                 self._video.refresh_frame()
                 self._video.Refresh()
         finally:
             dialog.Destroy()
 
     def _on_output_colourspace(self, event):
-        print("output colourspace")
+        dialog = ColourspaceDialog(self._video.video, False, self)
+        try:
+            if dialog.ShowModal() == wx.ID_OK:
+                self._video.video.output_profile = dialog.Profile
+                self._app.UpdateOutputProfileInSettings(dialog.Profile)
+                self._video.refresh_frame()
+                self._video.Refresh()
+        finally:
+            dialog.Destroy()
 
     # View
     def _on_metadata_inspector(self, event):
