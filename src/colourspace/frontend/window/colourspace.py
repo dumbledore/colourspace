@@ -107,16 +107,32 @@ class ColourspaceDialog(wx.Dialog):
         self._ranges.SetSelection(idx)
 
     def _on_profile(self, event):
-        print("on profile")
+        profile = self._profiles.GetString(self._profiles.GetSelection())
+
+        if profile != "Custom":
+            self._profile = PROFILES[profile]
+
+        self._update_from_profile()
 
     def _on_colourspace(self, event):
-        print("on csp")
+        colourspace = self._colourspaces.GetString(self._colourspaces.GetSelection())
+        self._profile = Profile(colourspace, self._profile.primaries, self._profile.transfer, self._profile.range)
+        self._update_from_profile()
 
     def _on_primaries(self, event):
-        print("on primaries")
+        primaries = self._primaries.GetString(self._primaries.GetSelection())
+        self._profile = Profile(self._profile.colourspace, primaries, self._profile.transfer, self._profile.range)
+        self._update_from_profile()
 
     def _on_transfer(self, event):
-        print("on trc")
+        transfer = self._transfers.GetString(self._transfers.GetSelection())
+        self._profile = Profile(self._profile.colourspace, self._profile.primaries, transfer, self._profile.range)
+        self._update_from_profile()
 
     def _on_range(self, event):
-        print("on range")
+        range = self._ranges.GetString(self._ranges.GetSelection())
+        if range == "Ignore":
+            range = None
+
+        self._profile = Profile(self._profile.colourspace, self._profile.primaries, self._profile.transfer, range)
+        self._update_from_profile()

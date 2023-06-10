@@ -33,8 +33,8 @@ class App(wx.App):
                 return frame
 
             # Try opening a new one
+            logger = logging.getLogger(__name__)
             try:
-                logger = logging.getLogger(__name__)
                 container = Container(filename)
                 stream = container.streams[0]  # Multiple tracks in a video not supported in app
 
@@ -62,7 +62,8 @@ class App(wx.App):
                 # Apply automatic corrections
                 stream = CorrectedStream(stream, profile, PROFILES["bt709"])
             except Exception as e:
-                wx.MessageDialog(None, f"Failed to open '{os.path.basename(filename)}: {e}'",
+                logger.warning(f"Failed to open '{os.path.basename(filename)}'", exc_info=e)
+                wx.MessageDialog(None, f"Failed to open '{os.path.basename(filename)}': {e}",
                                  "Failed to open file", wx.OK | wx.CENTER | wx.ICON_ERROR).ShowModal()
                 return None
         else:

@@ -1,7 +1,5 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
-import copy
-
 from colourspace.av.filter import Filter
 
 NAME = "colorspace"
@@ -121,10 +119,26 @@ PROFILE_NAMES = Filter.get_choices_for_option(NAME, "all")
 class Profile:
     def __init__(self, colourspace, primaries, transfer, range=None):
         # make sure we remove any synonyms
-        self.colourspace = COLOURSPACE_SYNONYMS.get(colourspace, colourspace)
-        self.primaries = PRIMARY_SYNONYMS.get(primaries, primaries)
-        self.transfer = TRANSFER_SYNONYMS.get(transfer, transfer)
-        self.range = range
+        self._colourspace = COLOURSPACE_SYNONYMS.get(colourspace, colourspace)
+        self._primaries = PRIMARY_SYNONYMS.get(primaries, primaries)
+        self._transfer = TRANSFER_SYNONYMS.get(transfer, transfer)
+        self._range = range
+
+    @property
+    def colourspace(self):
+        return self._colourspace
+
+    @property
+    def primaries(self):
+        return self._primaries
+
+    @property
+    def transfer(self):
+        return self._transfer
+
+    @property
+    def range(self):
+        return self._range
 
     def __eq__(self, other):
         # not comparing the colour range as it is not really
@@ -147,11 +161,11 @@ class Profile:
 
     @property
     def name(self):
-        names = [
-            name for name, profile in PROFILES.items() if profile == self
-        ]
+        for name, profile in PROFILES.items():
+            if profile == self:
+                return name
 
-        return names[0] if names else "Custom"
+        return "Custom"
 
     def __repr__(self):
         return f"{self.name}: {{ csp={self.colourspace}, prm={self.primaries}, trc={self.transfer}, rng={self.range} }}"
@@ -203,9 +217,8 @@ class Profile:
             problems["profile"] = "Falling back to BT.709"
             return profile, problems
 
-        # Make a copy of the profile to fill in the range
-        profile = copy.copy(profile)
-        profile.range = range
+        # Fill in the range
+        profile = Profile(profile.colourspace, profile.primaries, profile.transfer, range)
 
         problems["profile"] = "Using closest match"
         return profile, problems
