@@ -8,6 +8,7 @@ import wx
 from colourspace.av.container import Container
 from colourspace.av.filter import FilteredStream
 from colourspace.av.filter.colourspace import ColourspaceFilter, Profile, PROFILES
+from colourspace.av.filter.correct import CorrectedStream
 from colourspace.av.filter.rotate import rotate_filters
 from colourspace.frontend.window.video import VideoFrame
 from colourspace.util.settings import Settings
@@ -58,19 +59,8 @@ class App(wx.App):
 
                 logger.info(f"Selected input profile: {profile}")
 
-                # Get rotation from stream side data
-                rotation = float(stream.info.get("rotation", 0))
-
-                # Inject extra filters to handle autorotation.
-                # Dimensions may need to change if rotated at 90/270
-                filters, dimensions = rotate_filters(rotation, (stream.width, stream.height))
-
-                # Create ColourSpace filter
-                filters += [ColourspaceFilter(profile, PROFILES["bt709"])]
-
-                # Are there any filters in place (rotation / colourspace)?
-                if filters:
-                    stream = FilteredStream(stream, filters, dimensions)
+                # Apply automatic corrections
+                stream = CorrectedStream(stream, profile, PROFILES["bt709"])
             except Exception as e:
                 wx.MessageDialog(None, f"Failed to open '{os.path.basename(filename)}: {e}'",
                                  "Failed to open file", wx.OK | wx.CENTER | wx.ICON_ERROR).ShowModal()
