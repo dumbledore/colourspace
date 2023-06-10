@@ -14,7 +14,7 @@ class ColourspaceDialog(wx.Dialog):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        def add_choice(name, choices, error_key=None):
+        def add_choice(name, choices, handler, error_key=None):
             # label
             label = wx.StaticText(self, label=name)
             sizer.Add(label, 0, wx.ALL, 5)
@@ -24,6 +24,7 @@ class ColourspaceDialog(wx.Dialog):
 
             choices = wx.Choice(self, choices=choices)
             choices.SetSelection(0)
+            choices.Bind(wx.EVT_CHOICE, handler)
             sizer_.Add(choices, 1, wx.ALL | wx.EXPAND, 5)
 
             if error_key and (error_key in self._profile_errors):
@@ -35,11 +36,13 @@ class ColourspaceDialog(wx.Dialog):
 
             sizer.Add(sizer_, 1, wx.EXPAND, 5)
 
-        add_choice("Profile", ["Custom"] + list(PROFILES.keys()))
-        add_choice("Colour Space", COLOURSPACES, "colourspace")
-        add_choice("Primaries", PRIMARIES, "primaries")
-        add_choice("Transfer", TRANSFERS, "transfer")
-        add_choice("Range", ["Ignore"] + RANGES, "range")
+            return choices
+
+        self._profiles = add_choice("Profile", ["Custom"] + list(PROFILES.keys()), self._on_profile)
+        self._colourspaces = add_choice("Colour Space", COLOURSPACES, self._on_colourspace, "colourspace")
+        self._primaries = add_choice("Primaries", PRIMARIES, self._on_primaries, "primaries")
+        self._transfers = add_choice("Transfer", TRANSFERS, self._on_transfer, "transfer")
+        self._ranges = add_choice("Range", ["Ignore"] + RANGES, self._on_range, "range")
 
         # buttons
         button_sizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -56,6 +59,8 @@ class ColourspaceDialog(wx.Dialog):
 
         sizer.Add(button_sizer, 1, wx.EXPAND, 5)
 
+        self._update_from_profile()
+
         # fix up the frame
         self.SetSizeHints(wx.Size(200, 100), wx.DefaultSize)
         self.SetSizer(sizer)
@@ -63,3 +68,39 @@ class ColourspaceDialog(wx.Dialog):
         sizer.Fit(self)
 
         self.Centre(wx.BOTH)
+
+    def _update_from_profile(self):
+        # Profile name
+        idx = self._profiles.FindString(self._profile.name)
+        self._profiles.SetSelection(idx)
+
+        # Colourspace
+        idx = self._colourspaces.FindString(self._profile.colourspace)
+        self._colourspaces.SetSelection(idx)
+
+        # Primaries
+        idx = self._primaries.FindString(self._profile.primaries)
+        self._primaries.SetSelection(idx)
+
+        # Transfer characteristic
+        idx = self._transfers.FindString(self._profile.transfer)
+        self._transfers.SetSelection(idx)
+
+        # Range
+        idx = self._ranges.FindString(self._profile.range) if self._profile.range else 0
+        self._ranges.SetSelection(idx)
+
+    def _on_profile(self, event):
+        print("on profile")
+
+    def _on_colourspace(self, event):
+        print("on csp")
+
+    def _on_primaries(self, event):
+        print("on primaries")
+
+    def _on_transfer(self, event):
+        print("on trc")
+
+    def _on_range(self, event):
+        print("on range")
