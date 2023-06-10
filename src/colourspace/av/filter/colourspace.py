@@ -166,21 +166,21 @@ class Profile:
         range = stream.info.get("color_range")
 
         # Now try matching
-        problems = []
+        problems = {}
 
         def validate_param_(param_name, param_type, valid_names):
             nonlocal problems
 
             if not param_name:
-                problems += [f"{param_type} not available"]
+                problems[param_type] = "N/A"
             elif param_name not in valid_names:
-                problems += [f"Unsupported {param_type} `{param_name}`"]
+                problems[param_type] = f"{param_name} is not supported"
             else:
                 return valid_names[param_name]
 
         colourspace = validate_param_(colourspace, "colourspace", INFO_TO_COLOURSPACE)
-        primaries = validate_param_(primaries, "colour primaries", INFO_TO_PRIMARIES)
-        transfer = validate_param_(transfer, "transfer characteristic", INFO_TO_TRANSFER)
+        primaries = validate_param_(primaries, "primaries", INFO_TO_PRIMARIES)
+        transfer = validate_param_(transfer, "transfer", INFO_TO_TRANSFER)
         range = validate_param_(range, "range", INFO_TO_RANGES)
 
         profile = Profile(colourspace, primaries, transfer, range)
@@ -197,7 +197,7 @@ class Profile:
         max_score = max(scored_profiles.keys())
 
         # If nothing matched, return BT.709 as it is the most common.
-        # Otherwise return the highes ranking profile.
+        # Otherwise return the highest ranking profile.
         profile = PROFILES["bt709"] if not max_score else scored_profiles[max_score]
         if not max_score:
             return profile, problems
