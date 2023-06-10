@@ -43,10 +43,7 @@ class App(wx.App):
 
                 if filename not in videos:
                     # assign a most appropriate profile
-                    profile, profile_errors = Profile.from_stream(stream)
-
-                    if profile_errors:
-                        logger.warning(f"Errors while getting profile: {profile_errors}")
+                    profile, _ = Profile.from_stream(stream)
 
                     # Update video settings cache
                     videos[filename] = {"profile": profile}
@@ -56,8 +53,6 @@ class App(wx.App):
                 else:
                     # Get profile directly from cache
                     profile = videos[filename]["profile"]
-
-                logger.info(f"Selected input profile: {profile}")
 
                 # Apply automatic corrections
                 stream = CorrectedStream(stream, profile, PROFILES["bt709"])
