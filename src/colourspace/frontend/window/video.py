@@ -178,7 +178,9 @@ Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
 
     # Colourspace
     def _on_corretion_toggled(self, event):
-        print(f"correction: {self._correction_enabled.IsChecked()}")
+        self._video.video.correction = self._correction_enabled.IsChecked()
+        self._video.refresh_frame()
+        self._video.Refresh()
 
     def _on_input_colourspace(self, event):
         print("input colourspace")
