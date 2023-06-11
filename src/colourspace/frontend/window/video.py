@@ -7,7 +7,7 @@ import wx
 from colourspace.frontend.control.video import VideoPanel, EVT_VIDEO_SEEK
 from colourspace.frontend.util.drop import Drop
 from colourspace.frontend.window.colourspace import ColourspaceDialog
-from colourspace.frontend.window.file import SaveFrame
+from colourspace.frontend.window.file import OpenFiles, SaveFrame
 from colourspace.frontend.window.metadata import MetadataFrame
 from colourspace.frontend.window.seek import SeekDialog
 from colourspace.util.time import time_format
@@ -151,18 +151,8 @@ class VideoFrame(wx.Frame):
 
     # File
     def _on_open_file(self, event):
-        wildcard = """
-Video files|*.264;*.asf;*.avi;*.divx;*.h263;*.h264;*.hevc;*.m2v;*.m4v;*.mkv;*.mov;*.mp4;*.mpg;*.qt;*.vob;*.webm;*.webp;*.wmv|
-Image files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
-"""
-        with wx.FileDialog(self, "Open video/image file", wildcard=wildcard,
-                           style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST | wx.FD_MULTIPLE) as dialog:
-
-            if dialog.ShowModal() == wx.ID_CANCEL:
-                return  # cancelled
-
-            for filename in dialog.GetPaths():
-                self._app.Open(filename)
+        for filename in OpenFiles(self):
+            self._app.Open(filename)
 
     def _on_close_file(self, event):
         self.Close()

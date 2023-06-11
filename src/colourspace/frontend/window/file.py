@@ -6,6 +6,39 @@ import wx
 from collections import OrderedDict
 from itertools import chain
 
+FILE_TYPES = OrderedDict([
+    ("Video files", [
+        "264",
+        "asf",
+        "avi",
+        "divx",
+        "h263",
+        "h264",
+        "hevc",
+        "m2v",
+        "m4v",
+        "mkv",
+        "mov",
+        "mp4",
+        "mpg",
+        "qt",
+        "vob",
+        "webm",
+        "webp",
+        "wmv",
+    ]),
+    ("Image files", [
+        "bmp",
+        "gif",
+        "jpg",
+        "jpeg",
+        "png",
+        "psd",
+        "tga",
+        "tif",
+        "tiff",
+    ]),
+])
 
 SAVE_TYPES = OrderedDict([
     ("PNG", [
@@ -34,6 +67,16 @@ def get_wildcards(types):
 
     # Convert to FILE type|*.ext|...
     return "|".join(wildcards)
+
+
+def OpenFiles(parent):
+    with wx.FileDialog(parent, "Open video/image file", wildcard=get_wildcards(FILE_TYPES),
+                       style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST | wx.FD_MULTIPLE) as dialog:
+
+        if dialog.ShowModal() == wx.ID_OK:
+            return dialog.GetPaths()
+
+        return []
 
 
 def SaveFrame(parent):
