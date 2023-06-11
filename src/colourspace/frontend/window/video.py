@@ -7,6 +7,7 @@ import wx
 from colourspace.frontend.control.video import VideoPanel, EVT_VIDEO_SEEK
 from colourspace.frontend.util.drop import Drop
 from colourspace.frontend.window.colourspace import ColourspaceDialog
+from colourspace.frontend.window.file import SaveFrame
 from colourspace.frontend.window.metadata import MetadataFrame
 from colourspace.frontend.window.seek import SeekDialog
 from colourspace.util.time import time_format
@@ -188,17 +189,12 @@ Image files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
         self._save_to_file(filename)
 
     def _on_save_frame_as(self, event):
-        with wx.FileDialog(self, "Safe frame as", wildcard="PNG files|*.png|JPEG files|*.jpg",
-                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as dialog:
-
-            if dialog.ShowModal() == wx.ID_CANCEL:
-                return  # cancelled
-
-            print(dialog.GetPath())
+        filename = SaveFrame(self)
+        if filename:
+            self._video.Frame.save(filename)
 
     def _save_to_file(self, filename):
-        frame = self._video.Frame
-        frame.save(filename)
+        self._video.Frame.save(filename)
 
     # Colourspace
     def _on_corretion_toggled(self, event):
