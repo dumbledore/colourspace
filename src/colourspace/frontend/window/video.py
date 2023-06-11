@@ -162,14 +162,11 @@ class VideoFrame(wx.Frame):
 
     # Edit
     def _on_seek_time(self, event):
-        dialog = SeekDialog(self._video.Video, self)
-        try:
+        with SeekDialog(self._video.Video, self) as dialog:
             if dialog.ShowModal() == wx.ID_OK:
                 self._video.Seek(dialog.SeekPosition)
                 self._video.RefreshFrame()
                 self._video.Refresh()
-        finally:
-            dialog.Destroy()
 
     def _on_save_frame(self, event):
         # generate filename
@@ -193,26 +190,20 @@ class VideoFrame(wx.Frame):
         self._video.Refresh()
 
     def _on_input_colourspace(self, event):
-        dialog = ColourspaceDialog(self._video.Video, True, self)
-        try:
+        with ColourspaceDialog(self._video.Video, True, self) as dialog:
             if dialog.ShowModal() == wx.ID_OK:
                 self._video.Video.input_profile = dialog.Profile
                 self._app.UpdateVideoProfileInSettings(self._video.Video, dialog.Profile)
                 self._video.RefreshFrame()
                 self._video.Refresh()
-        finally:
-            dialog.Destroy()
 
     def _on_output_colourspace(self, event):
-        dialog = ColourspaceDialog(self._video.Video, False, self)
-        try:
+        with ColourspaceDialog(self._video.Video, False, self) as dialog:
             if dialog.ShowModal() == wx.ID_OK:
                 self._video.Video.output_profile = dialog.Profile
                 self._app.UpdateOutputProfileInSettings(dialog.Profile)
                 self._video.RefreshFrame()
                 self._video.Refresh()
-        finally:
-            dialog.Destroy()
 
     # View
     def _on_metadata_inspector(self, event):
