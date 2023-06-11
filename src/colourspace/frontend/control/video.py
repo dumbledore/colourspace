@@ -54,7 +54,7 @@ class VideoPanel(wx.Panel):
         self.SetSizerAndFit(sizer)
 
     @property
-    def video(self):
+    def Video(self):
         return self._video
 
     def _on_paint(self, event):
@@ -72,8 +72,8 @@ class VideoPanel(wx.Panel):
         dc.DrawBitmap(bitmap, 0, 0)
 
     def Seek(self, position):
-        position = int(position * 1000)
-        self._slider.SetValue(position)
+        int_position = int(position * 1000)
+        self._slider.SetValue(int_position)
         self._on_seek_position(position)
 
     def _on_seek(self, event):
@@ -85,20 +85,20 @@ class VideoPanel(wx.Panel):
         # produced a different frame
         if self._video.seek(position):
             # update the current frame
-            self.refresh_frame()
+            self.RefreshFrame()
             event = VideoSeekEvent(position=position)
             wx.PostEvent(self.Parent, event)
             self._panel.Refresh()
 
-    def refresh_frame(self):
+    def RefreshFrame(self):
         self._frame = self._video.frame.to_image()
 
     @property
-    def frame(self):
+    def Frame(self):
         return self._frame
 
-    def get_best_size(self, size):
-        aspect_ratio = self.video.height / self.video.width
+    def GetBestSize(self, size):
+        aspect_ratio = self._video.height / self._video.width
         width, height = size
         height = int(width * aspect_ratio)
 

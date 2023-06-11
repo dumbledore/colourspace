@@ -57,8 +57,8 @@ class VideoFrame(wx.Frame):
     def _on_close(self, event):
         if self._has_video:
             # close the container w/o waiting for dtr
-            filename = self._video.video.container.filename
-            self._video.video.container.close()
+            filename = self._video.Video.container.filename
+            self._video.Video.container.close()
             self._app.OnCloseWindow(filename)
 
         # Skip the event so that it is handled correctly by somebody else
@@ -67,7 +67,7 @@ class VideoFrame(wx.Frame):
     def _on_size(self, event):
         if self._has_video:
             size = self.GetClientSize()
-            size = self._video.get_best_size(size)
+            size = self._video.GetBestSize(size)
             self.SetClientSize(size)
 
         # Skip the event so that it is handled correctly by somebody else
@@ -79,7 +79,7 @@ class VideoFrame(wx.Frame):
     def _update_video_position(self, position):
         position = time_format(position)
         duration = time_format(
-            self._video.video.duration if self._has_video else 0)
+            self._video.Video.duration if self._has_video else 0)
         self._statusbar.SetStatusText(position + "/" + duration)
 
     def _create_menu(self):
@@ -171,19 +171,19 @@ Image files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
 
     # Edit
     def _on_seek_time(self, event):
-        dialog = SeekDialog(self._video.video, self)
+        dialog = SeekDialog(self._video.Video, self)
         try:
             if dialog.ShowModal() == wx.ID_OK:
                 self._video.Seek(dialog.SeekPosition)
-                self._video.refresh_frame()
+                self._video.RefreshFrame()
                 self._video.Refresh()
         finally:
             dialog.Destroy()
 
     def _on_save_frame(self, event):
         # generate filename
-        position = time_format(self._video.video.position).replace(":", "_").replace(".", "_")
-        filename, _ = os.path.splitext(self._video.video.container.filename)
+        position = time_format(self._video.Video.position).replace(":", "_").replace(".", "_")
+        filename, _ = os.path.splitext(self._video.Video.container.filename)
         filename = f"{filename}_{position}.png"
         self._save_to_file(filename)
 
@@ -197,33 +197,33 @@ Image files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
             print(dialog.GetPath())
 
     def _save_to_file(self, filename):
-        frame = self._video.frame
+        frame = self._video.Frame
         frame.save(filename)
 
     # Colourspace
     def _on_corretion_toggled(self, event):
-        self._video.video.correction = self._correction_enabled.IsChecked()
-        self._video.refresh_frame()
+        self._video.Video.correction = self._correction_enabled.IsChecked()
+        self._video.RefreshFrame()
         self._video.Refresh()
 
     def _on_input_colourspace(self, event):
-        dialog = ColourspaceDialog(self._video.video, True, self)
+        dialog = ColourspaceDialog(self._video.Video, True, self)
         try:
             if dialog.ShowModal() == wx.ID_OK:
-                self._video.video.input_profile = dialog.Profile
-                self._app.UpdateVideoProfileInSettings(self._video.video, dialog.Profile)
-                self._video.refresh_frame()
+                self._video.Video.input_profile = dialog.Profile
+                self._app.UpdateVideoProfileInSettings(self._video.Video, dialog.Profile)
+                self._video.RefreshFrame()
                 self._video.Refresh()
         finally:
             dialog.Destroy()
 
     def _on_output_colourspace(self, event):
-        dialog = ColourspaceDialog(self._video.video, False, self)
+        dialog = ColourspaceDialog(self._video.Video, False, self)
         try:
             if dialog.ShowModal() == wx.ID_OK:
-                self._video.video.output_profile = dialog.Profile
+                self._video.Video.output_profile = dialog.Profile
                 self._app.UpdateOutputProfileInSettings(dialog.Profile)
-                self._video.refresh_frame()
+                self._video.RefreshFrame()
                 self._video.Refresh()
         finally:
             dialog.Destroy()
@@ -231,7 +231,7 @@ Image files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
     # View
     def _on_metadata_inspector(self, event):
         if not self._metadata:
-            self._metadata = MetadataFrame(self._video.video, self)
+            self._metadata = MetadataFrame(self._video.Video, self)
 
             def on_metadata_close(event):
                 self._metadata_menu.Check(False)
