@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 # r-synced test files from FFmpeg
-tests/data
-tests/data/
+testdata
+testdata/

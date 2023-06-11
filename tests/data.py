@@ -6,7 +6,7 @@ from subprocess import check_call
 
 FFMPEG_FATE_SUITE_URL = "rsync://fate-suite.ffmpeg.org/fate-suite/"
 
-FFMPEG_FATE_SUITE = "tests/data"
+FFMPEG_FATE_SUITE = "testdata"
 
 FFMPEG_FATE_SKIPPED = [
     # VQC1 supported by FFmpeg, but not by PyAV
