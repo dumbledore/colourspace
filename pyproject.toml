@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "colourspace"
-version = "0.9.0"
+version = "1.0.0"
 description = "Render frames from videos and images applying the correct colourspace conversion."
 readme = "README.md"
 authors = [{ name = "Svetlin Ankov", email = "svetlin.ankov@live.com" }, { name = "Simona Dimitrova", email = "nimeria1308@gmail.com" }]
