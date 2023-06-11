@@ -93,6 +93,10 @@ class VideoPanel(wx.Panel):
     def refresh_frame(self):
         self._frame = self._video.frame.to_image()
 
+    @property
+    def frame(self):
+        return self._frame
+
     def get_best_size(self, size):
         aspect_ratio = self.video.height / self.video.width
         width, height = size

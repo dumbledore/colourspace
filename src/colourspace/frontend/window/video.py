@@ -1,5 +1,6 @@
 # Copyright (C) 2023, Svetlin Ankov, Simona Dimitrova
 
+import os
 import sys
 import wx
 
@@ -93,7 +94,7 @@ class VideoFrame(wx.Frame):
         seek_time = edit_menu.Append(wx.ID_ANY, "Seek\tCtrl+F", "Seek to a particular time")
         edit_menu.AppendSeparator()
         edit_menu.Append(wx.ID_SAVE, "Save frame\tCtrl+S", "Save the current frame along with video")
-        edit_menu.Append(wx.ID_SAVEAS, "Save frame to location", "Save the current frame to a specified location")
+        edit_menu.Append(wx.ID_SAVEAS, "Save frame as...", "Save the current frame to a specified location")
         menu_bar.Append(edit_menu, "&Edit")
 
         colourspace = wx.Menu()
@@ -151,7 +152,7 @@ class VideoFrame(wx.Frame):
     def _on_open_file(self, event):
         wildcard = """
 Video files|*.264;*.asf;*.avi;*.divx;*.h263;*.h264;*.hevc;*.m2v;*.m4v;*.mkv;*.mov;*.mp4;*.mpg;*.qt;*.vob;*.webm;*.webp;*.wmv|
-Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
+Image files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
 """
         with wx.FileDialog(self, "Open video/image file", wildcard=wildcard,
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST | wx.FD_MULTIPLE) as dialog:
@@ -180,10 +181,24 @@ Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
             dialog.Destroy()
 
     def _on_save_frame(self, event):
-        print("save")
+        # generate filename
+        position = time_format(self._video.video.position).replace(":", "_").replace(".", "_")
+        filename, _ = os.path.splitext(self._video.video.container.filename)
+        filename = f"{filename}_{position}.png"
+        self._save_to_file(filename)
 
     def _on_save_frame_as(self, event):
-        print("save as")
+        with wx.FileDialog(self, "Safe frame as", wildcard="PNG files|*.png|JPEG files|*.jpg",
+                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as dialog:
+
+            if dialog.ShowModal() == wx.ID_CANCEL:
+                return  # cancelled
+
+            print(dialog.GetPath())
+
+    def _save_to_file(self, filename):
+        frame = self._video.frame
+        frame.save(filename)
 
     # Colourspace
     def _on_corretion_toggled(self, event):
