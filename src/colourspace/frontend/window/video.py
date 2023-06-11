@@ -7,6 +7,7 @@ from colourspace.frontend.control.video import VideoPanel, EVT_VIDEO_SEEK
 from colourspace.frontend.util.drop import Drop
 from colourspace.frontend.window.colourspace import ColourspaceDialog
 from colourspace.frontend.window.metadata import MetadataFrame
+from colourspace.frontend.window.seek import SeekDialog
 from colourspace.util.time import time_format
 from PIL import Image
 
@@ -169,7 +170,14 @@ Image Files|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.psd;*.tga;*.tif;*.tiff
 
     # Edit
     def _on_seek_time(self, event):
-        print("seek time")
+        dialog = SeekDialog(self._video.video, self)
+        try:
+            if dialog.ShowModal() == wx.ID_OK:
+                self._video.Seek(dialog.SeekPosition)
+                self._video.refresh_frame()
+                self._video.Refresh()
+        finally:
+            dialog.Destroy()
 
     def _on_save_frame(self, event):
         print("save")

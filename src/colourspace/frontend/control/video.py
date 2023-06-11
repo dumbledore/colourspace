@@ -71,8 +71,15 @@ class VideoPanel(wx.Panel):
         # Draw to frame
         dc.DrawBitmap(bitmap, 0, 0)
 
+    def Seek(self, position):
+        position = int(position * 1000)
+        self._slider.SetValue(position)
+        self._on_seek_position(position)
+
     def _on_seek(self, event):
-        position = event.GetInt() / 1000
+        self._on_seek_position(event.GetInt() / 1000)
+
+    def _on_seek_position(self, position):
 
         # Repaint only if seek actually
         # produced a different frame
