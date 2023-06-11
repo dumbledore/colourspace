@@ -16,6 +16,7 @@ from pathlib import Path
 from pylru import lrucache
 
 SETTINGS_FILENAME = str(Path.home().joinpath(".clrview.cfg"))
+SETTINGS_VERSION = 1
 MAX_REMEMBERED_VIDEOS = 1000
 
 
@@ -69,7 +70,7 @@ class App(wx.App):
 
     def OnInit(self):
         self._opened = {}
-        self._settings = Settings(SETTINGS_FILENAME)
+        self._settings = Settings(SETTINGS_FILENAME, SETTINGS_VERSION)
         return True
 
     @property

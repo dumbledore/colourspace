@@ -33,33 +33,34 @@ class RestrictedUnpickler(pickle.Unpickler):
 
 
 class Settings:
-    def __init__(self, filename):
+    def __init__(self, filename, version):
         self._filename = filename
+        self._version = version
+
+    def _get_store(self):
+        try:
+            with open(self._filename, "rb") as f:
+                # Load the dict data from the store
+                data = RestrictedUnpickler(f).load()
+
+                # If the version is not correct, ignore the contents
+                version = data.get("version", None)
+                if version != self._version:
+                    raise Exception(f"Expected version {self._version}, but got {version}")
+
+                return data
+        except:
+            getLogger(__name__).warning(
+                f"Could not read from settings file {self._filename}", exc_info=True)
+            return {
+                "version": self._version,
+            }
 
     def get(self, setting, default=None):
-        try:
-            with open(self._filename, "rb") as f:
-                # Load the dict data from the store
-                data = RestrictedUnpickler(f).load()
-
-                # Return the setting value (if there)
-                return data.get(setting, default)
-        except:
-            getLogger(__name__).warning(
-                f"Could not read from settings file {self._filename}", exc_info=True)
-            return default
+        return self._get_store().get(setting, default)
 
     def set(self, setting, value):
-        # Have an empty default in case reading fails
-        data = {}
-
-        try:
-            with open(self._filename, "rb") as f:
-                # Load the dict data from the store
-                data = RestrictedUnpickler(f).load()
-        except:
-            getLogger(__name__).warning(
-                f"Could not read from settings file {self._filename}", exc_info=True)
+        data = self._get_store()
 
         # Update the data
         data[setting] = value
