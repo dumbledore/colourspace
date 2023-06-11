@@ -173,12 +173,16 @@ class VideoFrame(wx.Frame):
         position = time_format(self._video.Video.position).replace(":", "_").replace(".", "_")
         filename, _ = os.path.splitext(self._video.Video.container.filename)
         filename = f"{filename}_{position}.png"
-        self._save_to_file(filename)
+        with wx.ProgressDialog("Saving...", f"Saving frame to {os.path.basename(filename)}") as dialog:
+            dialog.Pulse()
+            self._save_to_file(filename)
 
     def _on_save_frame_as(self, event):
         filename = SaveFrame(self)
         if filename:
-            self._video.Frame.save(filename)
+            with wx.ProgressDialog("Saving...", f"Saving frame to {os.path.basename(filename)}") as dialog:
+                dialog.Pulse()
+                self._video.Frame.save(filename)
 
     def _save_to_file(self, filename):
         self._video.Frame.save(filename)
