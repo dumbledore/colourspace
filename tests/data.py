@@ -60,6 +60,9 @@ FFMPEG_FATE_SKIPPED = [
     "vp8/frame_size_change.webm",
     "vp9-test-vectors/vp90-2-05-resize.ivf",
 
+    # Do not work on Linux
+    "mkv/prores_bz2.mkv",
+
     # Pixel format 0x11311100 bits:8 is not implemented.
     # No support in PyAV which uses FFmpeg 5.1.2, but it is only
     # present on FFmpeg master anyway. Check 0b352e350e7.
