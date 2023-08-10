@@ -9,3 +9,8 @@ Make sure the following pip packages are installed in order to build:
 To create both the source package (`*.tar.gz`) and the binary wheel (`*.whl`):
 
     python -m build
+
+# Upload
+To upload to pypi simply use twine:
+
+    twine upload dist/*.tar.gz dist/*.whl
