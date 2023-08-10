@@ -16,7 +16,7 @@ from PIL import Image
 
 class VideoFrame(wx.Frame):
     def __init__(self, app, video=None,
-                 resize_quality=Image.LINEAR,
+                 resize_quality=Image.BILINEAR,
                  initial_min_max_size=(320, 640),
                  *args, **kwargs):
 

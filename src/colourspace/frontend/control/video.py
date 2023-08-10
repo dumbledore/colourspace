@@ -17,7 +17,7 @@ class VideoPanel(wx.Panel):
 
     def __init__(self, parent,
                  video,
-                 resize_quality=Image.LINEAR,
+                 resize_quality=Image.BILINEAR,
                  *args, **kwargs):
 
         super().__init__(parent, *args, **kwargs)
